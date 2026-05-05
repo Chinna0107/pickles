@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiArrowLeft, FiStar, FiZoomIn, FiX, FiChevronLeft, FiChevronRight,
-  FiShoppingBag, FiCheck, FiHeart, FiHome, FiTruck, FiShield,
+  FiStar, FiZoomIn, FiX, FiChevronLeft, FiChevronRight,
+  FiShoppingBag, FiCheck, FiHeart, FiTruck, FiShield,
   FiAward, FiPackage, FiMinus, FiPlus, FiShare2, FiMapPin,
-  FiThumbsUp, FiMessageCircle, FiInfo, FiPhone, FiMail, FiGift, FiPercent
+  FiThumbsUp, FiMessageCircle, FiInfo, FiPhone, FiMail, FiGift, FiPercent, FiArrowLeft
 } from 'react-icons/fi';
 import { products, getPriceByWeight, testimonials } from '../data/products';
 import './ProductDetail.css';
@@ -28,9 +28,9 @@ const NUTRITION = {
 const SPICE_LABELS = ['', 'Mild', 'Mild-Medium', 'Medium', 'Hot', 'Extra Hot'];
 
 export default function ProductDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
-  const product = products.find(p => p.id === parseInt(id));
+  const product = products.find(p => p.slug === slug);
 
   const [selectedWeight, setSelectedWeight] = useState(product?.prices[0]?.weight || '250g');
   const [selectedImage, setSelectedImage] = useState(0);
@@ -39,23 +39,12 @@ export default function ProductDetail() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
-  const [stickyVisible, setStickyVisible] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const actionRef = useRef(null);
 
   useEffect(() => {
     if (!product) navigate('/products');
     window.scrollTo(0, 0);
   }, [product, navigate]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setStickyVisible(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    if (actionRef.current) observer.observe(actionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   if (!product) return null;
 
@@ -76,25 +65,24 @@ export default function ProductDetail() {
   return (
     <div className="pd-page">
 
-      {/* HERO */}
-      <div className="pd-hero" style={{ backgroundImage: `url(${product.images[0]})` }}>
-        <div className="pd-hero-overlay" />
-        <div className="pd-hero-inner container">
+      {/* TOP BAR */}
+      <div className="pd-topbar">
+        <div className="container">
+          <motion.button className="pd-back-btn" onClick={() => navigate('/products')}
+            whileHover={{ x: -3 }} whileTap={{ scale: 0.96 }}>
+            <FiArrowLeft size={16} /> Back to Products
+          </motion.button>
           <nav className="pd-breadcrumb">
-            <Link to="/"><FiHome size={13} /> Home</Link>
+            <Link to="/">Home</Link>
             <span>/</span>
             <Link to="/products">Products</Link>
             <span>/</span>
             <span className="active">{product.name}</span>
           </nav>
-          <motion.button className="pd-back-btn" onClick={() => navigate('/products')}
-            whileHover={{ x: -4 }} whileTap={{ scale: 0.95 }}>
-            <FiArrowLeft /> Back to Products
-          </motion.button>
         </div>
       </div>
 
-      {/* MAIN */}
+      {/* MAIN GRID */}
       <div className="container pd-main">
 
         {/* IMAGE GALLERY */}
@@ -118,13 +106,6 @@ export default function ProductDetail() {
               <FiZoomIn /> Zoom
             </button>
 
-            {product.images.length > 1 && (
-              <>
-                <button className="pd-nav prev" onClick={prevImage}><FiChevronLeft /></button>
-                <button className="pd-nav next" onClick={nextImage}><FiChevronRight /></button>
-              </>
-            )}
-
             <div className="pd-dots">
               {product.images.map((_, i) => (
                 <button key={i} className={`pd-dot ${i === selectedImage ? 'active' : ''}`}
@@ -132,6 +113,13 @@ export default function ProductDetail() {
               ))}
             </div>
           </div>
+
+          {product.images.length > 1 && (
+            <div className="pd-nav-row">
+              <button className="pd-nav prev" onClick={prevImage}><FiChevronLeft /></button>
+              <button className="pd-nav next" onClick={nextImage}><FiChevronRight /></button>
+            </div>
+          )}
 
           <div className="pd-thumbs">
             {product.images.map((img, idx) => (
@@ -209,7 +197,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Actions */}
-          <div className="pd-actions" ref={actionRef}>
+          <div className="pd-actions">
             <motion.button className={`pd-cart-btn ${addedToCart ? 'success' : ''}`}
               onClick={handleAddToCart} whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }}>
               {addedToCart ? <FiCheck /> : <FiShoppingBag />}
@@ -233,50 +221,50 @@ export default function ProductDetail() {
               <span className="spice-label">{SPICE_LABELS[product.spice]}</span>
             </div>
           </div>
+        </motion.div>
+      </div>
 
-          {/* Benefits */}
-          <div className="pd-benefits">
-            <h3>Key Benefits</h3>
-            <div className="pd-benefits-grid">
-              {product.benefits.map((b, i) => (
-                <div key={i} className="pd-benefit-item">
-                  <span className="benefit-check">✓</span> {b}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="pd-trust-badges">
-            {TRUST_BADGES.map((b, i) => (
-              <motion.div key={i} className="pd-trust-badge" whileHover={{ y: -3 }}>
-                <span className="trust-icon">{b.icon}</span>
-                <div>
-                  <div className="trust-label">{b.label}</div>
-                  <div className="trust-sub">{b.sub}</div>
-                </div>
-              </motion.div>
+      {/* BENEFITS + TRUST + OFFERS */}
+      <div className="container pd-extra">
+        <div className="pd-benefits">
+          <h3>Key Benefits</h3>
+          <div className="pd-benefits-grid">
+            {product.benefits.map((b, i) => (
+              <div key={i} className="pd-benefit-item">
+                <span className="benefit-check">✓</span> {b}
+              </div>
             ))}
           </div>
+        </div>
 
-          {/* Offers */}
-          <div className="pd-offers">
-            <div className="pd-offer-card">
-              <FiGift className="offer-icon" />
+        <div className="pd-trust-badges">
+          {TRUST_BADGES.map((b, i) => (
+            <motion.div key={i} className="pd-trust-badge" whileHover={{ y: -3 }}>
+              <span className="trust-icon">{b.icon}</span>
               <div>
-                <div className="offer-title">Free Gift Wrapping</div>
-                <div className="offer-desc">Perfect for gifting occasions</div>
+                <div className="trust-label">{b.label}</div>
+                <div className="trust-sub">{b.sub}</div>
               </div>
-            </div>
-            <div className="pd-offer-card">
-              <FiPercent className="offer-icon" />
-              <div>
-                <div className="offer-title">Bulk Discount</div>
-                <div className="offer-desc">Save more on larger quantities</div>
-              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="pd-offers">
+          <div className="pd-offer-card">
+            <FiGift className="offer-icon" />
+            <div>
+              <div className="offer-title">Free Gift Wrapping</div>
+              <div className="offer-desc">Perfect for gifting occasions</div>
             </div>
           </div>
-        </motion.div>
+          <div className="pd-offer-card">
+            <FiPercent className="offer-icon" />
+            <div>
+              <div className="offer-title">Bulk Discount</div>
+              <div className="offer-desc">Save more on larger quantities</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* TABS */}
@@ -427,7 +415,7 @@ export default function ProductDetail() {
                 <motion.div key={rp.id} className="pd-related-card"
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }} whileHover={{ y: -6 }}
-                  onClick={() => navigate(`/products/${rp.id}`)}>
+                  onClick={() => navigate(`/products/${rp.slug}`)}>
                   <div className="related-img-wrap">
                     <img src={rp.images[0]} alt={rp.name} />
                     <span className="related-tag-badge">{rp.tag}</span>
@@ -488,27 +476,6 @@ export default function ProductDetail() {
           </div>
         </div>
       </section>
-
-      {/* STICKY BAR */}
-      <AnimatePresence>
-        {stickyVisible && (
-          <motion.div className="pd-sticky-bar"
-            initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 80, opacity: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-            <div className="sticky-info">
-              <img src={product.images[0]} alt={product.name} />
-              <div>
-                <div className="sticky-name">{product.name}</div>
-                <div className="sticky-price">₹{currentPrice.price} · {selectedWeight}</div>
-              </div>
-            </div>
-            <motion.button className={`sticky-btn ${addedToCart ? 'success' : ''}`}
-              onClick={handleAddToCart} whileTap={{ scale: 0.96 }}>
-              {addedToCart ? <><FiCheck /> Added!</> : <><FiShoppingBag /> Add to Cart</>}
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* FULLSCREEN */}
       <AnimatePresence>

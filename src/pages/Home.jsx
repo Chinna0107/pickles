@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiStar, FiShoppingBag, FiAward, FiTruck, FiShield, FiHeart } from 'react-icons/fi';
@@ -51,8 +51,42 @@ const features = [
   { icon: <FiHeart />, title: 'Made with Love', desc: 'Every jar crafted with care & passion' },
 ];
 
+const storyPoints = [
+  { icon: '🌿', title: 'Farm-to-Jar Freshness', desc: 'We source the freshest mangoes, chillies, and spices directly from local farmers in Andhra Pradesh.' },
+  { icon: '👩‍🍳', title: 'Traditional Recipes', desc: 'Every recipe is a secret passed down through generations, preserving the authentic Andhra flavor.' },
+  { icon: '❤️', title: 'Made with Passion', desc: 'Founder Sridevi personally oversees every batch to ensure consistent quality and taste.' },
+];
+
 const featured = products.filter(p => ['Bestseller', 'Popular'].includes(p.tag)).slice(0, 4);
 const bestSelling = products.sort((a, b) => b.reviews - a.reviews).slice(0, 4);
+
+function useCountUp(target, duration = 1800) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(false);
+  useEffect(() => {
+    if (ref.current) return;
+    ref.current = true;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      setCount(Math.floor(current));
+      if (current >= target) clearInterval(timer);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [target, duration]);
+  return count;
+}
+
+function AnimatedStat({ value, suffix = '', label, accent }) {
+  const num = useCountUp(value);
+  return (
+    <div className="hc-stat-inner">
+      <strong style={{ color: accent || 'var(--gold)' }}>{num}{suffix}</strong>
+      <span>{label}</span>
+    </div>
+  );
+}
 
 function StarRating({ rating }) {
   return (
@@ -75,7 +109,7 @@ function ProductCard({ product, delay = 0 }) {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ y: -8 }}>
-      <Link to={`/products/${product.id}`} className="product-card-img-link">
+      <Link to={`/products/${product.slug}`} className="product-card-img-link">
         <div className="product-card-img">
           <img src={product.images[0]} alt={product.name} className="product-real-img" />
           <div className="product-img-overlay" />
@@ -85,7 +119,7 @@ function ProductCard({ product, delay = 0 }) {
       </Link>
       <div className="product-card-body">
         <div className="product-weight">{firstPrice.weight}</div>
-        <Link to={`/products/${product.id}`}><h3>{product.name}</h3></Link>
+        <Link to={`/products/${product.slug}`}><h3>{product.name}</h3></Link>
         <p>{product.shortDesc}</p>
         <div className="spice-level">
           {'🌶️'.repeat(product.spice)}{'⬜'.repeat(5 - product.spice)}
@@ -122,9 +156,15 @@ export default function Home() {
 
   const banner = banners[currentBanner];
 
+  const handleDragEnd = (_, info) => {
+    if (info.offset.x < -60) setCurrentBanner(p => (p + 1) % banners.length);
+    else if (info.offset.x > 60) setCurrentBanner(p => (p - 1 + banners.length) % banners.length);
+  };
+
   return (
     <div className="home page-enter">
-      {/* HERO BANNER */}
+
+      {/* HERO */}
       <section className="hero">
         <AnimatePresence mode="wait">
           <motion.div key={currentBanner} className="hero-bg"
@@ -140,6 +180,76 @@ export default function Home() {
         </AnimatePresence>
 
         <div className="container hero-content">
+
+          {/* VISUAL — order-1 on mobile so it shows first */}
+          <motion.div className="hero-visual"
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}>
+            <div className="hero-collage">
+              <div className="hero-collage-inner">
+                <AnimatePresence mode="wait">
+                  <motion.div key={`top-${currentBanner}`} className="hc-img hc-img--top"
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 50 }}
+                    transition={{ duration: 0.55, ease: 'easeOut' }}>
+                    <img src={banner.image} alt={banner.title} />
+                  </motion.div>
+                </AnimatePresence>
+                <AnimatePresence mode="wait">
+                  <motion.div key={`mid-${currentBanner}`} className="hc-img hc-img--mid"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.55, delay: 0.1, ease: 'easeOut' }}>
+                    <img src={banners[(currentBanner + 1) % banners.length].image} alt="" />
+                  </motion.div>
+                </AnimatePresence>
+                <AnimatePresence mode="wait">
+                  <motion.div key={`bot-${currentBanner}`} className="hc-img hc-img--bot"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.55, delay: 0.2, ease: 'easeOut' }}>
+                    <img src={banners[(currentBanner + 2) % banners.length].image} alt="" />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* <motion.div className="hc-stat hc-stat--tl"
+                initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.45, delay: 0.45 }}>
+                <AnimatedStat value={500} suffix="+" label="Happy Customers" accent={banner.accent} />
+              </motion.div>
+              <motion.div className="hc-stat hc-stat--tr"
+                initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.45, delay: 0.6 }}>
+                <AnimatedStat value={18} suffix="+" label="Products" accent={banner.accent} />
+              </motion.div>
+              <motion.div className="hc-stat hc-stat--br"
+                initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.45, delay: 0.75 }}>
+                <AnimatedStat value={5} suffix="★" label="Avg Rating" accent={banner.accent} />
+              </motion.div> */}
+            </div>
+            {/* mobile swipe hint */}
+            <div className="hero-swipe-hint">
+              {banners.map((_, i) => (
+                <motion.div key={i} className="swipe-bar"
+                  animate={{ width: i === currentBanner ? 28 : 8, opacity: i === currentBanner ? 1 : 0.35 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ background: i === currentBanner ? banner.accent : 'rgba(255,255,255,0.5)' }}
+                />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* TEXT — order-2 on mobile so it shows after image */}
           <AnimatePresence mode="wait">
             <motion.div key={currentBanner} className="hero-text"
               initial={{ opacity: 0, x: -60 }}
@@ -163,41 +273,19 @@ export default function Home() {
                 </Link>
                 <Link to="/about" className="btn-outline-hero">Our Story</Link>
               </div>
-              <div className="hero-stats">
-                <div className="stat"><strong>500+</strong><span>Happy Customers</span></div>
-                <div className="stat-divider" />
-                <div className="stat"><strong>18+</strong><span>Products</span></div>
-                <div className="stat-divider" />
-                <div className="stat"><strong>5★</strong><span>Avg Rating</span></div>
-              </div>
             </motion.div>
           </AnimatePresence>
-
-          <motion.div className="hero-visual"
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}>
-            <div className="hero-img-wrap">
-              <div className="hero-img-glow" style={{ background: banner.accent }} />
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={currentBanner}
-                  src={banner.image}
-                  alt={banner.title}
-                  className="hero-product-img"
-                  initial={{ opacity: 0, scale: 1.08 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.7 }}
-                />
-              </AnimatePresence>
-              <div className="hero-img-ring" style={{ borderColor: banner.accent + '55' }} />
-              <div className="hero-img-badge">
-                <span>✨ {banner.badge}</span>
-              </div>
-            </div>
-          </motion.div>
         </div>
+
+        <div className="hero-trust-pill">
+          <span>🚚</span> Free delivery on orders above ₹499
+        </div>
+
+        <motion.div className="hero-scroll-hint"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}>
+          <div className="scroll-arrow" />
+        </motion.div>
 
         <div className="banner-dots">
           {banners.map((_, i) => (
@@ -208,14 +296,18 @@ export default function Home() {
       </section>
 
       {/* FEATURES */}
-      <section className="features-strip">
+      <motion.section className="features-strip"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}>
         <div className="container features-grid">
           {features.map((f, i) => (
             <motion.div key={i} className="feature-item"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}>
+              transition={{ duration: 0.5, delay: i * 0.12 }}>
               <div className="feature-icon">{f.icon}</div>
               <div>
                 <h4>{f.title}</h4>
@@ -224,7 +316,7 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* OUR STORY */}
       <section className="story-section">
@@ -232,7 +324,7 @@ export default function Home() {
           <motion.div className="story-visual"
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8 }}>
             <div className="story-img-wrap">
               <div className="story-img-bg" />
@@ -253,7 +345,7 @@ export default function Home() {
           <motion.div className="story-content"
             initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8 }}>
             <div className="section-title" style={{ textAlign: 'left', marginBottom: 32 }}>
               <span className="tag">Our Story</span>
@@ -261,27 +353,16 @@ export default function Home() {
               <p>What started as a family tradition in a small kitchen in Hyderabad has grown into a beloved brand trusted by thousands of families across India.</p>
             </div>
             <div className="story-points">
-              <div className="story-point">
-                <div className="point-icon">🌿</div>
-                <div>
-                  <h4>Farm-to-Jar Freshness</h4>
-                  <p>We source the freshest mangoes, chillies, and spices directly from local farmers in Andhra Pradesh.</p>
-                </div>
-              </div>
-              <div className="story-point">
-                <div className="point-icon">👩‍🍳</div>
-                <div>
-                  <h4>Traditional Recipes</h4>
-                  <p>Every recipe is a secret passed down through generations, preserving the authentic Andhra flavor.</p>
-                </div>
-              </div>
-              <div className="story-point">
-                <div className="point-icon">❤️</div>
-                <div>
-                  <h4>Made with Passion</h4>
-                  <p>Founder Sridevi personally oversees every batch to ensure consistent quality and taste.</p>
-                </div>
-              </div>
+              {storyPoints.map((pt, i) => (
+                <motion.div key={i} className="story-point"
+                  initial={{ opacity: 0, x: 40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.15 }}>
+                  <div className="point-icon">{pt.icon}</div>
+                  <div><h4>{pt.title}</h4><p>{pt.desc}</p></div>
+                </motion.div>
+              ))}
             </div>
             <Link to="/about" className="btn-primary" style={{ marginTop: 8 }}>
               <span>Read Full Story</span>
@@ -294,20 +375,28 @@ export default function Home() {
       {/* FEATURED PRODUCTS */}
       <section className="products-section">
         <div className="container">
-          <div className="section-title">
+          <motion.div className="section-title"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6 }}>
             <span className="tag">Handpicked for You</span>
             <h2>Featured Products</h2>
             <p>Our most loved pickles and spice powders, crafted with the finest ingredients</p>
-          </div>
+          </motion.div>
           <div className="products-grid">
             {featured.map((p, i) => <ProductCard key={p.id} product={p} delay={i * 0.1} />)}
           </div>
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
+          <motion.div style={{ textAlign: 'center', marginTop: 48 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}>
             <Link to="/products" className="btn-primary">
               <span>View All Products</span>
               <FiArrowRight />
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -315,11 +404,15 @@ export default function Home() {
       <section className="bestselling-section">
         <div className="bestselling-bg" />
         <div className="container">
-          <div className="section-title">
+          <motion.div className="section-title"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6 }}>
             <span className="tag">Customer Favorites</span>
             <h2>Best Selling Products</h2>
             <p>The most ordered pickles by our loyal customers — tried, tested, and loved</p>
-          </div>
+          </motion.div>
           <div className="products-grid">
             {bestSelling.map((p, i) => <ProductCard key={p.id} product={p} delay={i * 0.1} />)}
           </div>
@@ -329,24 +422,29 @@ export default function Home() {
       {/* TESTIMONIALS */}
       <section className="testimonials-section">
         <div className="container">
-          <div className="section-title">
+          <motion.div className="section-title"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6 }}>
             <span className="tag">What Customers Say</span>
             <h2>Loved Across India</h2>
             <p>Real reviews from real pickle lovers</p>
-          </div>
+          </motion.div>
 
           <div className="testimonials-wrapper">
             <div className="testimonials-track">
               {testimonials.map((t, i) => (
                 <motion.div key={t.id} className={`testimonial-card ${i === activeTestimonial ? 'active' : ''}`}
                   onClick={() => setActiveTestimonial(i)}
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.3 }}>
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  whileHover={{ y: -8 }}>
                   <div className="quote-icon">"</div>
                   <p className="testimonial-text">{t.text}</p>
-                  <div className="testimonial-stars">
-                    {'⭐'.repeat(t.rating)}
-                  </div>
+                  <div className="testimonial-stars">{'⭐'.repeat(t.rating)}</div>
                   <div className="testimonial-author">
                     <div className="author-avatar">{t.avatar}</div>
                     <div>
@@ -367,14 +465,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA BANNER */}
+      {/* CTA */}
       <section className="cta-section">
         <div className="cta-bg" />
         <div className="container cta-content">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6 }}>
             <span className="cta-emoji">🌶️</span>
             <h2>Ready to Taste Authentic Andhra?</h2>

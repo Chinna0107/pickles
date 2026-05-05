@@ -2,6 +2,7 @@ export const products = [
   // Veg Pickles
   { 
     id: 1, 
+    slug: 'mango-avakaya',
     name: 'Mango Avakaya', 
     category: 'veg', 
     rating: 4.9, 
@@ -27,6 +28,7 @@ export const products = [
   },
   { 
     id: 2, 
+    slug: 'gongura-pachadi',
     name: 'Gongura Pachadi', 
     category: 'veg', 
     rating: 4.8, 
@@ -52,6 +54,7 @@ export const products = [
   },
   { 
     id: 3, 
+    slug: 'tomato-pickle',
     name: 'Tomato Pickle', 
     category: 'veg', 
     rating: 4.7, 
@@ -77,6 +80,7 @@ export const products = [
   },
   { 
     id: 4, 
+    slug: 'lemon-pickle',
     name: 'Lemon Pickle', 
     category: 'veg', 
     rating: 4.8, 
@@ -102,6 +106,7 @@ export const products = [
   },
   { 
     id: 5, 
+    slug: 'garlic-pickle',
     name: 'Garlic Pickle', 
     category: 'veg', 
     rating: 4.9, 
@@ -127,6 +132,7 @@ export const products = [
   },
   { 
     id: 6, 
+    slug: 'amla-pickle',
     name: 'Amla Pickle', 
     category: 'veg', 
     rating: 4.6, 
@@ -154,6 +160,7 @@ export const products = [
   // Non-Veg Pickles
   { 
     id: 7, 
+    slug: 'chicken-pickle',
     name: 'Chicken Pickle', 
     category: 'nonveg', 
     rating: 4.9, 
@@ -179,6 +186,7 @@ export const products = [
   },
   { 
     id: 8, 
+    slug: 'mutton-pickle',
     name: 'Mutton Pickle', 
     category: 'nonveg', 
     rating: 4.8, 
@@ -204,6 +212,7 @@ export const products = [
   },
   { 
     id: 9, 
+    slug: 'prawn-pickle',
     name: 'Prawn Pickle', 
     category: 'nonveg', 
     rating: 4.7, 
@@ -229,6 +238,7 @@ export const products = [
   },
   { 
     id: 10, 
+    slug: 'fish-pickle',
     name: 'Fish Pickle', 
     category: 'nonveg', 
     rating: 4.8, 
@@ -254,6 +264,7 @@ export const products = [
   },
   { 
     id: 11, 
+    slug: 'egg-pickle',
     name: 'Egg Pickle', 
     category: 'nonveg', 
     rating: 4.6, 
@@ -279,6 +290,7 @@ export const products = [
   },
   { 
     id: 12, 
+    slug: 'crab-pickle',
     name: 'Crab Pickle', 
     category: 'nonveg', 
     rating: 4.9, 
@@ -306,6 +318,7 @@ export const products = [
   // Karam Podi
   { 
     id: 13, 
+    slug: 'kandi-podi',
     name: 'Kandi Podi', 
     category: 'karam', 
     rating: 4.9, 
@@ -331,6 +344,7 @@ export const products = [
   },
   { 
     id: 14, 
+    slug: 'nuvvula-podi',
     name: 'Nuvvula Podi', 
     category: 'karam', 
     rating: 4.8, 
@@ -356,6 +370,7 @@ export const products = [
   },
   { 
     id: 15, 
+    slug: 'palli-podi',
     name: 'Palli Podi', 
     category: 'karam', 
     rating: 4.7, 
@@ -381,6 +396,7 @@ export const products = [
   },
   { 
     id: 16, 
+    slug: 'kobbari-podi',
     name: 'Kobbari Podi', 
     category: 'karam', 
     rating: 4.8, 
@@ -406,6 +422,7 @@ export const products = [
   },
   { 
     id: 17, 
+    slug: 'karivepaku-podi',
     name: 'Karivepaku Podi', 
     category: 'karam', 
     rating: 4.9, 
@@ -431,6 +448,7 @@ export const products = [
   },
   { 
     id: 18, 
+    slug: 'mirchi-karam',
     name: 'Mirchi Karam', 
     category: 'karam', 
     rating: 4.8, 

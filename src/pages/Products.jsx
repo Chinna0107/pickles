@@ -124,7 +124,7 @@ export default function Products() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}>
-                    <Link to={`/products/${product.id}`} className="product-card-link">
+                    <Link to={`/products/${product.slug}`} className="product-card-link">
                       <div className="pcf-img">
                         <div className="pcf-emoji">{product.emoji}</div>
                         <div className="pcf-tag">{product.tag}</div>
@@ -137,7 +137,7 @@ export default function Products() {
                         <span className="pcf-weight">{firstPrice.weight}</span>
                         <span className="pcf-spice">{'🌶️'.repeat(product.spice)}</span>
                       </div>
-                      <Link to={`/products/${product.id}`} className="product-name-link">
+                      <Link to={`/products/${product.slug}`} className="product-name-link">
                         <h3>{product.name}</h3>
                       </Link>
                       <p>{product.shortDesc}</p>
