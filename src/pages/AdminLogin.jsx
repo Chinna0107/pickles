@@ -1,0 +1,104 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiShield } from 'react-icons/fi';
+import logo from '../assets/logo.jpeg';
+import './Login.css';
+
+export default function AdminLogin() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [showPass, setShowPass] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert('Admin login successful!');
+  };
+
+  return (
+    <div className="login-page admin-login-page">
+      <div className="login-bg">
+        <div className="login-bg-gradient admin-gradient" />
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="login-particle admin-particle" style={{ '--i': i }} />
+        ))}
+      </div>
+
+      <div className="login-container">
+        <motion.div className="login-card admin-card"
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}>
+
+          <div className="login-brand">
+            <div className="login-logo admin-logo">
+              <img src={logo} alt="OM Pickles" className="login-logo-img" />
+            </div>
+            <div className="login-brand-name">ADMIN PANEL</div>
+            <div className="login-brand-sub">OM Pickles & Foods</div>
+          </div>
+
+          <div className="admin-warning">
+            <FiShield />
+            <span>Restricted Access — Authorized Personnel Only</span>
+          </div>
+
+          <h2 className="login-title">Admin Sign In</h2>
+          <p className="login-subtitle">Enter your credentials to access the dashboard</p>
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <FiMail className="input-icon" />
+              <input type="email" placeholder="Admin Email" required
+                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+            </div>
+            <div className="input-group">
+              <FiLock className="input-icon" />
+              <input type={showPass ? 'text' : 'password'} placeholder="Admin Password" required
+                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+              <button type="button" className="pass-toggle" onClick={() => setShowPass(!showPass)}>
+                {showPass ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+            <div className="forgot-link">
+              <a href="#">Forgot Password?</a>
+            </div>
+            <button type="submit" className="login-btn admin-btn">
+              <span>Access Dashboard</span>
+              <FiArrowRight />
+            </button>
+          </form>
+
+          <div className="admin-features">
+            <div className="admin-feature">📦 Manage Orders</div>
+            <div className="admin-feature">🛍️ Manage Products</div>
+            <div className="admin-feature">👥 Customer Data</div>
+            <div className="admin-feature">📊 Analytics</div>
+          </div>
+
+          <div className="login-footer-links">
+            <Link to="/">← Back to Home</Link>
+            <Link to="/login">Customer Login</Link>
+          </div>
+        </motion.div>
+
+        <motion.div className="login-side admin-side"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}>
+          <div className="login-side-content">
+            <div className="side-emoji">🛡️</div>
+            <h3>Admin Dashboard</h3>
+            <p>Manage your OM Pickles business from one powerful dashboard.</p>
+            <div className="side-benefits">
+              <div className="benefit">📦 Manage all orders</div>
+              <div className="benefit">🛍️ Add/edit products</div>
+              <div className="benefit">👥 View customer data</div>
+              <div className="benefit">📊 Sales analytics</div>
+              <div className="benefit">🚚 Track deliveries</div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

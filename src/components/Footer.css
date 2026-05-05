@@ -1,0 +1,228 @@
+.footer {
+  position: relative;
+  margin-top: 80px;
+}
+
+.footer-wave {
+  line-height: 0;
+  margin-bottom: -2px;
+}
+
+.footer-wave svg {
+  width: 100%;
+  height: 80px;
+  display: block;
+}
+
+.footer-body {
+  background: var(--dark);
+  color: rgba(255,255,255,0.75);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 48px;
+  padding: 60px 24px 40px;
+}
+
+.footer-brand p {
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 20px 0 24px;
+  color: rgba(255,255,255,0.6);
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo-icon {
+  font-size: 36px;
+  filter: drop-shadow(0 4px 8px rgba(212,160,23,0.4));
+}
+
+.footer-logo-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+  flex-shrink: 0;
+}
+
+.footer-logo-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+.footer-logo-tagline {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  transition: var(--transition);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.social-btn:hover {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+  color: var(--white);
+  transform: translateY(-4px);
+  border-color: transparent;
+}
+
+.footer-col h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--white);
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+  border-radius: 2px;
+}
+
+.footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-col ul li a,
+.footer-col ul li span {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  transition: var(--transition);
+}
+
+.footer-col ul li a:hover {
+  color: var(--gold-light);
+  padding-left: 6px;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.contact-list li svg {
+  color: var(--gold);
+  margin-top: 2px;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 0;
+}
+
+.footer-bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+}
+
+.footer-bottom-inner strong {
+  color: var(--gold-light);
+}
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  
+  .footer-logo-img {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .footer-logo-name {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom-inner { flex-direction: column; gap: 8px; text-align: center; }
+  
+  .footer-logo {
+    gap: 10px;
+  }
+  
+  .footer-logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
+  
+  .footer-logo-name {
+    font-size: 20px;
+  }
+  
+  .footer-logo-tagline {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .footer-grid {
+    padding: 40px 16px 30px;
+    gap: 24px;
+  }
+  
+  .footer-logo-img {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .footer-logo-name {
+    font-size: 18px;
+  }
+  
+  .footer-col h4 {
+    font-size: 16px;
+  }
+  
+  .footer-col ul li a,
+  .footer-col ul li span {
+    font-size: 13px;
+  }
+}
