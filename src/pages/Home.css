@@ -935,6 +935,11 @@
   .hero-scroll-hint { display: none; }
   .banner-dots { display: none; }
   .hero-swipe-hint { display: flex; }
+  .hero {
+    height: auto;
+    min-height: calc(100vh - 116px);
+    padding: 24px 0 32px;
+  }
   .hero-content {
     grid-template-columns: 1fr;
     padding: 0 20px;
@@ -969,7 +974,7 @@
 }
 
 @media (max-width: 480px) {
-  .hero { height: calc(100vh - 65px); }
+  .hero { height: auto; min-height: calc(100vh - 65px); padding: 20px 0 28px; }
   .products-grid { grid-template-columns: 1fr; }
   .testimonials-track { grid-template-columns: 1fr; }
   .hero-content { padding: 0 16px; gap: 18px; }
@@ -988,4 +993,7 @@
   .cta-content p { font-size: 0.95rem; }
   .cta-actions { flex-direction: column; align-items: center; }
   .btn-outline-white { width: 100%; justify-content: center; }
+  .features-grid { grid-template-columns: 1fr; }
+  .testimonials-section { padding: 40px 0; }
+  .testimonials-track { gap: 12px; }
 }

@@ -319,10 +319,18 @@ a.cc-value:hover { color: var(--gold-dark); }
 }
 
 @media (max-width: 1024px) {
-  .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+  .contact-layout { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
 }
 
 @media (max-width: 600px) {
-  .contact-form-wrap { padding: 28px 20px; }
+  .contact-layout { padding: 40px 16px; }
+  .contact-form-wrap { padding: 24px 16px; }
   .form-row { grid-template-columns: 1fr; }
+  .contact-info-header h2 { font-size: 1.5rem; }
+  .map-placeholder { height: 260px; }
+}
+
+@media (max-width: 400px) {
+  .contact-layout { padding: 28px 12px; }
+  .contact-form-wrap { padding: 20px 12px; }
 }

@@ -106,7 +106,7 @@
 .pd-page .pd-gallery {
   position: sticky;
   top: 50px;
-  padding: 20px;
+  padding: 16px;
 }
 
 .pd-page .pd-main-img-wrap {
@@ -1258,18 +1258,19 @@
   .pd-page .pd-main {
     grid-template-columns: 1fr;
   }
-
   .pd-page .pd-gallery {
     position: static;
   }
-
   .pd-page .pd-storage-grid,
   .pd-page .pd-related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
   .pd-page .pd-contact-card {
     grid-template-columns: 1fr;
+  }
+  .pd-page .pd-extra .pd-benefits-grid,
+  .pd-page .pd-extra .pd-trust-badges {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1291,46 +1292,29 @@
   .pd-page .pd-gallery,
   .pd-page .pd-info,
   .pd-page .pd-tabs-section .container {
-    border-radius: 24px;
+    border-radius: 20px;
   }
-
   .pd-page .pd-dots { display: none; }
-
   .pd-page .pd-topbar .container { gap: 10px; }
   .pd-page .pd-back-btn { padding: 8px 14px; font-size: 0.82rem; }
   .pd-page .pd-breadcrumb { font-size: 0.82rem; }
-
   .pd-page .pd-gallery,
   .pd-page .pd-info,
   .pd-page .pd-tabs-section .container,
   .pd-page .pd-tab-content,
-  .pd-page .pd-contact-content {
-    padding: 20px;
-  }
-
-  .pd-page .pd-main-img-wrap {
-    height: 240px;
-  }
-
+  .pd-page .pd-contact-content { padding: 16px; }
+  .pd-page .pd-main-img-wrap { height: 240px; }
+  .pd-page .pd-main { padding-top: 16px; padding-bottom: 16px; gap: 16px; }
+  .pd-page .pd-extra { gap: 14px; padding-bottom: 20px; }
+  .pd-page .pd-extra .pd-benefits { padding: 16px; }
   .pd-page .pd-actions,
   .pd-page .pd-related-header,
-  .pd-page .pd-contact-method {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .pd-page .pd-fav-btn {
-    width: 100%;
-  }
-
+  .pd-page .pd-contact-method { flex-direction: column; align-items: stretch; }
+  .pd-page .pd-fav-btn { width: 100%; }
   .pd-page .pd-storage-grid,
-  .pd-page .pd-related-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pd-page .pd-contact-card img {
-    min-height: 260px;
-  }
+  .pd-page .pd-related-grid { grid-template-columns: 1fr; }
+  .pd-page .pd-contact-card img { min-height: 220px; }
+  .pd-page .pd-title { font-size: clamp(1.6rem, 5vw, 2.4rem); }
 }
 
 @media (max-width: 540px) {
