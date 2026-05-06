@@ -3,24 +3,35 @@ import { CartProvider } from './context/CartContext';
 import ScrollToTop from './components/ScrollToTop';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 import CustomerLogin from './pages/CustomerLogin';
 import AdminLogin from './pages/AdminLogin';
-import CustomerDashboard from './pages/CustomerDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import Checkout from './pages/Checkout';
-import Cart from './pages/Cart';
+
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminOverview from './pages/admin/AdminOverview';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminReports from './pages/admin/AdminReports';
+
+import CustomerLayout from './pages/customer/CustomerLayout';
+import CustomerOverview from './pages/customer/CustomerOverview';
+import CustomerOrders from './pages/customer/CustomerOrders';
+import CustomerProfile from './pages/customer/CustomerProfile';
+
 import './index.css';
 
-const NO_LAYOUT = ['/customer/dashboard', '/admin/dashboard'];
+const DASHBOARD_PATHS = ['/admin', '/customer'];
 
 function Layout({ children }) {
   const path = window.location.pathname;
-  const hide = NO_LAYOUT.some(p => path.startsWith(p));
+  const hide = DASHBOARD_PATHS.some(p => path.startsWith(p) && path !== '/admin');
   return hide ? <>{children}</> : (<><Header /><main>{children}</main><Footer /></>);
 }
 
@@ -31,17 +42,31 @@ export default function App() {
         <ScrollToTop />
         <Layout>
           <Routes>
+            {/* Public */}
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<CustomerLogin />} />
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/login" element={<CustomerLogin />} />
+            <Route path="/admin" element={<AdminLogin />} />
+
+            {/* Admin Panel */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="dashboard" element={<AdminOverview />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="reports" element={<AdminReports />} />
+            </Route>
+
+            {/* Customer Panel */}
+            <Route path="/customer" element={<CustomerLayout />}>
+              <Route path="dashboard" element={<CustomerOverview />} />
+              <Route path="orders" element={<CustomerOrders />} />
+              <Route path="profile" element={<CustomerProfile />} />
+            </Route>
           </Routes>
         </Layout>
       </BrowserRouter>
