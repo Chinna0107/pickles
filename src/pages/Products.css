@@ -347,6 +347,11 @@
   box-shadow: 0 8px 20px rgba(235,184,18,0.4);
 }
 
+.pcf-btn.added {
+  background: linear-gradient(135deg, #3f8f47, #58a85d);
+  color: var(--white);
+}
+
 .no-results {
   grid-column: 1 / -1;
   text-align: center;

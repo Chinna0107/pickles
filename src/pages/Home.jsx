@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiStar, FiShoppingBag, FiAward, FiTruck, FiShield, FiHeart } from 'react-icons/fi';
-import { products, testimonials } from '../data/products';
+import { testimonials } from '../data/products';
+import { useProducts } from '../hooks/useProducts';
+import { useCart } from '../context/CartContext';
 import './Home.css';
 
 const banners = [
@@ -57,9 +59,6 @@ const storyPoints = [
   { icon: '❤️', title: 'Made with Passion', desc: 'Founder Sridevi personally oversees every batch to ensure consistent quality and taste.' },
 ];
 
-const featured = products.filter(p => ['Bestseller', 'Popular'].includes(p.tag)).slice(0, 4);
-const bestSelling = products.sort((a, b) => b.reviews - a.reviews).slice(0, 4);
-
 function useCountUp(target, duration = 1800) {
   const [count, setCount] = useState(0);
   const ref = useRef(false);
@@ -100,8 +99,17 @@ function StarRating({ rating }) {
 }
 
 function ProductCard({ product, delay = 0 }) {
-  const firstPrice = product.prices[0];
-  const discount = Math.round(((firstPrice.originalPrice - firstPrice.price) / firstPrice.originalPrice) * 100);
+  const firstPrice = product.prices?.[0] || { weight: '', price: 0, originalPrice: 0 };
+  const discount = firstPrice.originalPrice ? Math.round(((firstPrice.originalPrice - firstPrice.price) / firstPrice.originalPrice) * 100) : 0;
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    addToCart(product, firstPrice.weight, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  };
   return (
     <motion.div className="product-card"
       initial={{ opacity: 0, y: 40 }}
@@ -111,7 +119,7 @@ function ProductCard({ product, delay = 0 }) {
       whileHover={{ y: -8 }}>
       <Link to={`/products/${product.slug}`} className="product-card-img-link">
         <div className="product-card-img">
-          <img src={product.images[0]} alt={product.name} className="product-real-img" />
+          <img src={product.images?.[0]} alt={product.name} className="product-real-img" />
           <div className="product-img-overlay" />
           <div className="product-tag">{product.tag}</div>
           <div className="product-discount">-{discount}%</div>
@@ -120,7 +128,7 @@ function ProductCard({ product, delay = 0 }) {
       <div className="product-card-body">
         <div className="product-weight">{firstPrice.weight}</div>
         <Link to={`/products/${product.slug}`}><h3>{product.name}</h3></Link>
-        <p>{product.shortDesc}</p>
+        <p>{product.short_desc}</p>
         <div className="spice-level">
           {'🌶️'.repeat(product.spice)}{'⬜'.repeat(5 - product.spice)}
         </div>
@@ -130,9 +138,9 @@ function ProductCard({ product, delay = 0 }) {
             <span className="price">₹{firstPrice.price}</span>
             <span className="original-price">₹{firstPrice.originalPrice}</span>
           </div>
-          <motion.button className="add-btn" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}>
+          <motion.button className={`add-btn ${added ? 'added' : ''}`} onClick={handleAdd} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}>
             <FiShoppingBag />
-            <span>Add</span>
+            <span>{added ? '✓' : 'Add'}</span>
           </motion.button>
         </div>
       </div>
@@ -141,8 +149,12 @@ function ProductCard({ product, delay = 0 }) {
 }
 
 export default function Home() {
+  const { products, loading } = useProducts();
   const [currentBanner, setCurrentBanner] = useState(0);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const featured = products.filter(p => ['Bestseller', 'Popular'].includes(p.tag)).slice(0, 4);
+  const bestSelling = [...products].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 4);
 
   useEffect(() => {
     const t = setInterval(() => setCurrentBanner(p => (p + 1) % banners.length), 5000);

@@ -475,6 +475,17 @@
   border-color: rgba(235, 184, 18, 0.25);
 }
 
+/* LOGIN ERROR */
+.login-error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #ef4444;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .login-container {

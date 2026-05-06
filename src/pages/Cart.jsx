@@ -1,36 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTag, FiTruck } from 'react-icons/fi';
-import { products } from '../data/products';
+import { useCart } from '../context/CartContext';
 import './Cart.css';
 
-const defaultItems = [
-  { ...products[0], selectedWeight: '250g', qty: 2 },
-  { ...products[6], selectedWeight: '500g', qty: 1 },
-  { ...products[12], selectedWeight: '200g', qty: 1 },
-];
-
 export default function Cart() {
-  const [items, setItems] = useState(defaultItems);
+  const navigate = useNavigate();
+  const { items, updateQty, removeItem, clearCart } = useCart();
   const [coupon, setCoupon] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
 
   const getPrice = (item) =>
-    item.prices.find(p => p.weight === item.selectedWeight)?.price || item.prices[0].price;
-
-  const updateQty = (id, weight, delta) => {
-    setItems(prev =>
-      prev.map(i =>
-        i.id === id && i.selectedWeight === weight
-          ? { ...i, qty: Math.max(1, i.qty + delta) }
-          : i
-      )
-    );
-  };
-
-  const removeItem = (id, weight) =>
-    setItems(prev => prev.filter(i => !(i.id === id && i.selectedWeight === weight)));
+    item.prices?.find(p => p.weight === item.selectedWeight)?.price || item.prices?.[0]?.price || 0;
 
   const subtotal = items.reduce((sum, i) => sum + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
@@ -79,27 +61,27 @@ export default function Cart() {
             <div className="cart-items-col">
               <div className="cart-items-header">
                 <h2>Order Items</h2>
-                <button className="clear-btn" onClick={() => setItems([])}>Clear All</button>
+                <button className="clear-btn" onClick={() => clearCart()}>Clear All</button>
               </div>
 
               <AnimatePresence>
                 {items.map((item) => {
                   const price = getPrice(item);
-                  const origPrice = item.prices.find(p => p.weight === item.selectedWeight)?.originalPrice || price;
+                  const origPrice = item.prices?.find(p => p.weight === item.selectedWeight)?.originalPrice || price;
                   return (
                     <motion.div key={`${item.id}-${item.selectedWeight}`} className="cart-item"
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 30, height: 0, marginBottom: 0 }}
                       transition={{ duration: 0.3 }}>
-                      <Link to={`/products/${item.id}`} className="cart-item-img">
-                        <img src={item.images[0]} alt={item.name} />
+                      <Link to={`/products/${item.slug}`} className="cart-item-img">
+                        <img src={item.images?.[0]} alt={item.name} />
                       </Link>
                       <div className="cart-item-info">
                         <div className="cart-item-top">
                           <div>
                             <span className="cart-item-tag">{item.tag}</span>
-                            <Link to={`/products/${item.id}`}><h3>{item.name}</h3></Link>
+                            <Link to={`/products/${item.slug}`}><h3>{item.name}</h3></Link>
                             <p className="cart-item-weight">{item.selectedWeight} · {'🌶️'.repeat(item.spice)}</p>
                           </div>
                           <button className="remove-btn" onClick={() => removeItem(item.id, item.selectedWeight)}>
@@ -190,7 +172,7 @@ export default function Cart() {
                 <p className="coupon-hint">Try code: <strong>OM10</strong></p>
               )}
 
-              <motion.button className="checkout-btn" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <motion.button className="checkout-btn" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => navigate('/checkout')}>
                 <FiShoppingBag size={18} />
                 <span>Proceed to Checkout</span>
                 <FiArrowRight size={16} />

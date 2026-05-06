@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiShoppingBag, FiSearch, FiFilter } from 'react-icons/fi';
-import { products, getPriceByWeight } from '../data/products';
+import { useCart } from '../context/CartContext';
+import { useProducts } from '../hooks/useProducts';
 import './Products.css';
 
 const categories = [
-  { id: 'all', label: 'All Products', emoji: '🫙', count: products.length },
-  { id: 'veg', label: 'Veg Pickles', emoji: '🥭', count: products.filter(p => p.category === 'veg').length },
-  { id: 'nonveg', label: 'Non-Veg Pickles', emoji: '🍗', count: products.filter(p => p.category === 'nonveg').length },
-  { id: 'karam', label: 'Karam Podi', emoji: '🌶️', count: products.filter(p => p.category === 'karam').length },
+  { id: 'all', label: 'All Products', emoji: '🫙' },
+  { id: 'veg', label: 'Veg Pickles', emoji: '🥭' },
+  { id: 'nonveg', label: 'Non-Veg Pickles', emoji: '🍗' },
+  { id: 'karam', label: 'Karam Podi', emoji: '🌶️' },
 ];
 
 export default function Products() {
@@ -17,23 +18,42 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState(searchParams.get('cat') || 'all');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('popular');
+  const [addedId, setAddedId] = useState(null);
+  const { products: allProducts, loading } = useProducts();
+  const { addToCart } = useCart();
+
+  const handleAdd = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product.prices?.[0]) return;
+    addToCart(product, product.prices[0].weight, 1);
+    setAddedId(product.id);
+    setTimeout(() => setAddedId(null), 1800);
+  };
 
   useEffect(() => {
     const cat = searchParams.get('cat');
     if (cat) setActiveCategory(cat);
   }, [searchParams]);
 
-  const filtered = products
+  const cats = categories.map(c => ({
+    ...c,
+    count: c.id === 'all' ? allProducts.length : allProducts.filter(p => p.category === c.id).length,
+  }));
+
+  const filtered = allProducts
     .filter(p => activeCategory === 'all' || p.category === activeCategory)
-    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.shortDesc.toLowerCase().includes(search.toLowerCase()))
+    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || (p.short_desc || '').toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
-      const priceA = a.prices[0].price;
-      const priceB = b.prices[0].price;
+      const priceA = a.prices?.[0]?.price || 0;
+      const priceB = b.prices?.[0]?.price || 0;
       if (sort === 'price-low') return priceA - priceB;
       if (sort === 'price-high') return priceB - priceA;
       if (sort === 'rating') return b.rating - a.rating;
       return b.reviews - a.reviews;
     });
+
+  if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: 80 }}><div className="dash-spinner" /></div>;
 
   return (
     <div className="products-page page-enter">
@@ -117,8 +137,8 @@ export default function Products() {
               </div>
             ) : (
               filtered.map((product, i) => {
-                const firstPrice = product.prices[0];
-                const discount = Math.round(((firstPrice.originalPrice - firstPrice.price) / firstPrice.originalPrice) * 100);
+                const firstPrice = product.prices?.[0] || { weight: '', price: 0, originalPrice: 0 };
+                const discount = firstPrice.originalPrice ? Math.round(((firstPrice.originalPrice - firstPrice.price) / firstPrice.originalPrice) * 100) : 0;
                 return (
                   <motion.div key={product.id} className="product-card-full"
                     initial={{ opacity: 0, y: 30 }}
@@ -129,7 +149,7 @@ export default function Products() {
                         <div className="pcf-emoji">{product.emoji}</div>
                         <div className="pcf-tag">{product.tag}</div>
                         <div className="pcf-discount">-{discount}%</div>
-                        <img src={product.images[0]} alt={product.name} className="pcf-product-img" />
+                        <img src={product.images?.[0]} alt={product.name} className="pcf-product-img" />
                       </div>
                     </Link>
                     <div className="pcf-body">
@@ -140,7 +160,7 @@ export default function Products() {
                       <Link to={`/products/${product.slug}`} className="product-name-link">
                         <h3>{product.name}</h3>
                       </Link>
-                      <p>{product.shortDesc}</p>
+                      <p>{product.short_desc}</p>
                       <div className="pcf-stars">
                         {[1,2,3,4,5].map(s => (
                           <FiStar key={s} className={s <= Math.floor(product.rating) ? 'star filled' : 'star'} />
@@ -153,11 +173,12 @@ export default function Products() {
                           <span className="pcf-original">₹{firstPrice.originalPrice}</span>
                         </div>
                         <motion.button 
-                          className="pcf-btn"
+                          className={`pcf-btn ${addedId === product.id ? 'added' : ''}`}
                           whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}>
+                          whileTap={{ scale: 0.95 }}
+                          onClick={(e) => handleAdd(e, product)}>
                           <FiShoppingBag />
-                          <span>Add to Cart</span>
+                          <span>{addedId === product.id ? '✓ Added' : 'Add to Cart'}</span>
                         </motion.button>
                       </div>
                     </div>

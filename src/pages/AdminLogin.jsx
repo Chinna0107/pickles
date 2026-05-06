@@ -1,17 +1,39 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiShield } from 'react-icons/fi';
 import logo from '../assets/logo.jpeg';
 import './Login.css';
 
+import API from '../config';
+
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Admin login successful!');
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, password: form.password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      localStorage.setItem('adminToken', data.token);
+      localStorage.setItem('adminData', JSON.stringify(data.admin));
+      navigate('/admin/dashboard');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,6 +67,8 @@ export default function AdminLogin() {
           <h2 className="login-title">Admin Sign In</h2>
           <p className="login-subtitle">Enter your credentials to access the dashboard</p>
 
+          {error && <div className="login-error">{error}</div>}
+
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
               <FiMail className="input-icon" />
@@ -59,11 +83,8 @@ export default function AdminLogin() {
                 {showPass ? <FiEyeOff /> : <FiEye />}
               </button>
             </div>
-            <div className="forgot-link">
-              <a href="#">Forgot Password?</a>
-            </div>
-            <button type="submit" className="login-btn admin-btn">
-              <span>Access Dashboard</span>
+            <button type="submit" className="login-btn admin-btn" disabled={loading}>
+              <span>{loading ? 'Authenticating...' : 'Access Dashboard'}</span>
               <FiArrowRight />
             </button>
           </form>

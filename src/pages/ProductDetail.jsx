@@ -7,7 +7,9 @@ import {
   FiAward, FiPackage, FiMinus, FiPlus, FiShare2, FiMapPin,
   FiThumbsUp, FiMessageCircle, FiInfo, FiPhone, FiMail, FiGift, FiPercent, FiArrowLeft
 } from 'react-icons/fi';
-import { products, getPriceByWeight, testimonials } from '../data/products';
+import { testimonials } from '../data/products';
+import { useProduct } from '../hooks/useProducts';
+import { useCart } from '../context/CartContext';
 import './ProductDetail.css';
 
 const TRUST_BADGES = [
@@ -27,12 +29,15 @@ const NUTRITION = {
 
 const SPICE_LABELS = ['', 'Mild', 'Mild-Medium', 'Medium', 'Hot', 'Extra Hot'];
 
+import API from '../config';
+
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const product = products.find(p => p.slug === slug);
+  const { product, loading } = useProduct(slug);
+  const { addToCart } = useCart();
 
-  const [selectedWeight, setSelectedWeight] = useState(product?.prices[0]?.weight || '250g');
+  const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -41,23 +46,30 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
+  useEffect(() => { window.scrollTo(0, 0); }, [slug]);
+
   useEffect(() => {
-    if (!product) navigate('/products');
-    window.scrollTo(0, 0);
-  }, [product, navigate]);
+    if (product?.prices?.[0]?.weight) setSelectedWeight(product.prices[0].weight);
+  }, [product]);
 
-  if (!product) return null;
+  if (loading || !product) return <div style={{ display: 'flex', justifyContent: 'center', padding: 80 }}><div className="dash-spinner" /></div>;
 
-  const currentPrice = getPriceByWeight(product, selectedWeight);
-  const discount = Math.round(((currentPrice.originalPrice - currentPrice.price) / currentPrice.originalPrice) * 100);
-  const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const images = product.images?.length ? product.images : ['https://placehold.co/600x600?text=No+Image'];
+  const prices = product.prices?.length ? product.prices : [{ weight: '', price: 0, originalPrice: 0 }];
+  const benefits = product.benefits?.length ? product.benefits : [];
+  const ingredients = product.ingredients?.length ? product.ingredients : [];
+
+  const currentPrice = prices.find(p => p.weight === selectedWeight) || prices[0];
+  const discount = currentPrice.originalPrice ? Math.round(((currentPrice.originalPrice - currentPrice.price) / currentPrice.originalPrice) * 100) : 0;
+  const relatedProducts = [];
   const nutrition = NUTRITION[product.category] || NUTRITION.veg;
   const reviews = testimonials.slice(0, 3);
 
-  const nextImage = () => setSelectedImage(p => (p + 1) % product.images.length);
-  const prevImage = () => setSelectedImage(p => (p - 1 + product.images.length) % product.images.length);
+  const nextImage = () => setSelectedImage(p => (p + 1) % images.length);
+  const prevImage = () => setSelectedImage(p => (p - 1 + images.length) % images.length);
 
   const handleAddToCart = () => {
+    addToCart(product, selectedWeight, quantity);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2500);
   };
@@ -91,7 +103,7 @@ export default function ProductDetail() {
 
           <div className="pd-main-img-wrap">
             <AnimatePresence mode="wait">
-              <motion.img key={selectedImage} src={product.images[selectedImage]} alt={product.name}
+              <motion.img key={selectedImage} src={images[selectedImage]} alt={product.name}
                 className="pd-main-img"
                 initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }} transition={{ duration: 0.3 }} />
@@ -107,14 +119,14 @@ export default function ProductDetail() {
             </button>
 
             <div className="pd-dots">
-              {product.images.map((_, i) => (
+              {images.map((_, i) => (
                 <button key={i} className={`pd-dot ${i === selectedImage ? 'active' : ''}`}
                   onClick={() => setSelectedImage(i)} />
               ))}
             </div>
           </div>
 
-          {product.images.length > 1 && (
+          {images.length > 1 && (
             <div className="pd-nav-row">
               <button className="pd-nav prev" onClick={prevImage}><FiChevronLeft /></button>
               <button className="pd-nav next" onClick={nextImage}><FiChevronRight /></button>
@@ -122,7 +134,7 @@ export default function ProductDetail() {
           )}
 
           <div className="pd-thumbs">
-            {product.images.map((img, idx) => (
+            {images.map((img, idx) => (
               <motion.button key={idx} className={`pd-thumb ${idx === selectedImage ? 'active' : ''}`}
                 onClick={() => setSelectedImage(idx)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <img src={img} alt={`${product.name} ${idx + 1}`} />
@@ -148,7 +160,7 @@ export default function ProductDetail() {
               <span className="pill tag">{product.tag}</span>
             </div>
             <h1 className="pd-title">{product.name}</h1>
-            <p className="pd-subtitle">{product.shortDesc}</p>
+            <p className="pd-subtitle">{product.short_desc}</p>
 
             <div className="pd-rating-row">
               <div className="pd-stars">
@@ -172,7 +184,7 @@ export default function ProductDetail() {
           <div className="pd-weight-section">
             <label>Select Weight</label>
             <div className="pd-weight-options">
-              {product.prices.map(p => (
+              {prices.map(p => (
                 <motion.button key={p.weight}
                   className={`pd-weight-btn ${selectedWeight === p.weight ? 'selected' : ''}`}
                   onClick={() => setSelectedWeight(p.weight)}
@@ -229,7 +241,7 @@ export default function ProductDetail() {
         <div className="pd-benefits">
           <h3>Key Benefits</h3>
           <div className="pd-benefits-grid">
-            {product.benefits.map((b, i) => (
+            {benefits.map((b, i) => (
               <div key={i} className="pd-benefit-item">
                 <span className="benefit-check">✓</span> {b}
               </div>
@@ -285,11 +297,11 @@ export default function ProductDetail() {
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
 
-              {activeTab === 0 && <p className="pd-desc-text">{product.fullDesc}</p>}
+              {activeTab === 0 && <p className="pd-desc-text">{product.full_desc}</p>}
 
               {activeTab === 1 && (
                 <ul className="pd-ingredients">
-                  {product.ingredients.map((ing, i) => (
+                  {ingredients.map((ing, i) => (
                     <motion.li key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}>
                       <span className="ing-dot">●</span> {ing}
@@ -486,13 +498,13 @@ export default function ProductDetail() {
               initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}>
               <button className="fs-close" onClick={() => setIsFullscreen(false)}><FiX /></button>
               <AnimatePresence mode="wait">
-                <motion.img key={selectedImage} src={product.images[selectedImage]} alt="fullscreen"
+                <motion.img key={selectedImage} src={images[selectedImage]} alt="fullscreen"
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
               </AnimatePresence>
-              {product.images.length > 1 && (
+              {images.length > 1 && (
                 <div className="fs-nav">
                   <button onClick={prevImage}><FiChevronLeft /></button>
-                  <span>{selectedImage + 1} / {product.images.length}</span>
+                  <span>{selectedImage + 1} / {images.length}</span>
                   <button onClick={nextImage}><FiChevronRight /></button>
                 </div>
               )}

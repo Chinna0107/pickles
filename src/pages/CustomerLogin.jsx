@@ -1,18 +1,39 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiUser } from 'react-icons/fi';
+import { FiMail, FiPhone, FiArrowRight, FiUser } from 'react-icons/fi';
 import logo from '../assets/logo.jpeg';
 import './Login.css';
 
-export default function CustomerLogin() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [showPass, setShowPass] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
+import API from '../config';
 
-  const handleSubmit = (e) => {
+export default function CustomerLogin() {
+  const [form, setForm] = useState({ email: '', mobile: '', name: '' });
+  const [isRegister, setIsRegister] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(isRegister ? 'Account created successfully!' : 'Login successful!');
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/customer/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, mobile: form.mobile }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      localStorage.setItem('customerToken', data.token);
+      localStorage.setItem('customerData', JSON.stringify({ email: data.email, mobile: data.mobile }));
+      navigate('/customer/dashboard');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,7 +51,6 @@ export default function CustomerLogin() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}>
 
-          {/* BRAND */}
           <div className="login-brand">
             <div className="login-logo">
               <img src={logo} alt="OM Pickles" className="login-logo-img" />
@@ -39,12 +59,11 @@ export default function CustomerLogin() {
             <div className="login-brand-sub">& Foods</div>
           </div>
 
-          {/* TABS */}
           <div className="login-tabs">
-            <button className={`login-tab ${!isRegister ? 'active' : ''}`} onClick={() => setIsRegister(false)}>
+            <button className={`login-tab ${!isRegister ? 'active' : ''}`} onClick={() => { setIsRegister(false); setError(''); }}>
               Sign In
             </button>
-            <button className={`login-tab ${isRegister ? 'active' : ''}`} onClick={() => setIsRegister(true)}>
+            <button className={`login-tab ${isRegister ? 'active' : ''}`} onClick={() => { setIsRegister(true); setError(''); }}>
               Register
             </button>
             <div className="tab-slider" style={{ transform: `translateX(${isRegister ? '100%' : '0'})` }} />
@@ -55,18 +74,17 @@ export default function CustomerLogin() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}>
 
-            <h2 className="login-title">
-              {isRegister ? 'Create Account' : 'Welcome Back!'}
-            </h2>
-            <p className="login-subtitle">
-              {isRegister ? 'Join OM Pickles family today' : 'Sign in to your account'}
-            </p>
+            <h2 className="login-title">{isRegister ? 'Create Account' : 'Welcome Back!'}</h2>
+            <p className="login-subtitle">{isRegister ? 'Join OM Pickles family today' : 'Enter your email & mobile to continue'}</p>
+
+            {error && <div className="login-error">{error}</div>}
 
             <form onSubmit={handleSubmit} className="login-form">
               {isRegister && (
                 <div className="input-group">
                   <FiUser className="input-icon" />
-                  <input type="text" placeholder="Full Name" required />
+                  <input type="text" placeholder="Full Name" value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })} />
                 </div>
               )}
               <div className="input-group">
@@ -74,27 +92,13 @@ export default function CustomerLogin() {
                 <input type="email" placeholder="Email Address" required
                   value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
-              <div className="input-group has-toggle">
-                <FiLock className="input-icon" />
-                <input type={showPass ? 'text' : 'password'} placeholder="Password" required
-                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
-                <button type="button" className="pass-toggle" onClick={() => setShowPass(!showPass)}>
-                  {showPass ? <FiEyeOff /> : <FiEye />}
-                </button>
+              <div className="input-group">
+                <FiPhone className="input-icon" />
+                <input type="tel" placeholder="Mobile Number" required
+                  value={form.mobile} onChange={e => setForm({ ...form, mobile: e.target.value })} />
               </div>
-              {isRegister && (
-                <div className="input-group has-toggle">
-                  <FiLock className="input-icon" />
-                  <input type={showPass ? 'text' : 'password'} placeholder="Confirm Password" required />
-                </div>
-              )}
-              {!isRegister && (
-                <div className="forgot-link">
-                  <a href="#">Forgot Password?</a>
-                </div>
-              )}
-              <button type="submit" className="login-btn">
-                <span>{isRegister ? 'Create Account' : 'Sign In'}</span>
+              <button type="submit" className="login-btn" disabled={loading}>
+                <span>{loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}</span>
                 <FiArrowRight />
               </button>
             </form>

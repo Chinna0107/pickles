@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { FiUser, FiMenu, FiX, FiPhone, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.jpeg';
+import { useCart } from '../context/CartContext';
 import './Header.css';
 
 const navLinks = [
@@ -18,6 +19,7 @@ export default function Header() {
   const location = useLocation();
   const menuRef = useRef(null);
   const menuBtnRef = useRef(null);
+  const { totalItems } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -77,7 +79,7 @@ export default function Header() {
           <div className="header-actions">
             <Link to="/cart" className="cart-btn">
               <FiShoppingCart size={18} />
-              <span className="cart-badge">0</span>
+              {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
             </Link>
             <Link to="/login" className="btn-login">
               <FiUser size={16} />
