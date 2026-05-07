@@ -1,3 +1,49 @@
+.promo-banner {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 0;
+  position: relative;
+  z-index: 1002;
+  overflow: hidden;
+}
+
+.promo-scroll {
+  width: 100%;
+  overflow: hidden;
+}
+
+.promo-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  white-space: nowrap;
+  animation: scroll-left 20s linear infinite;
+}
+
+.promo-content span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promo-content strong {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 800;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
 .topbar {
   background: linear-gradient(135deg, var(--dark), var(--dark2));
   color: rgba(255,255,255,0.8);
@@ -287,6 +333,15 @@
   .topbar-inner span:nth-child(2) { display: none; }
   .topbar-inner span:nth-child(3) { display: none; }
   
+  .promo-banner {
+    font-size: 12px;
+    padding: 6px 0;
+  }
+  
+  .promo-content {
+    gap: 30px;
+  }
+  
   .header-inner {
     height: 70px;
   }
@@ -307,6 +362,15 @@
 }
 
 @media (max-width: 480px) {
+  .promo-banner {
+    font-size: 11px;
+    padding: 5px 0;
+  }
+  
+  .promo-content {
+    gap: 25px;
+  }
+  
   .header-inner {
     height: 65px;
     gap: 16px;

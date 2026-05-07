@@ -419,26 +419,142 @@
 .ck-success {
   text-align: center;
   padding: 60px 20px;
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
 }
-.ck-success-icon { font-size: 72px; margin-bottom: 20px; }
-.ck-success h2 { font-size: 2rem; color: var(--dark); margin-bottom: 12px; }
-.ck-success p { color: var(--text-light); line-height: 1.7; margin-bottom: 20px; }
-.ck-payment-id {
-  background: var(--cream);
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
+
+.ck-success-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.ck-success-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+  position: relative;
+}
+
+.ck-success-icon::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.ck-checkmark-svg {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.ck-checkmark-circle {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 2;
+  fill: none;
+}
+
+.ck-checkmark-check {
+  stroke: white;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ck-success h2 {
+  font-size: 2.2rem;
+  color: var(--dark);
+  margin-bottom: 16px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--dark), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ck-success p {
   color: var(--text-light);
-  margin-bottom: 8px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+  font-size: 1.1rem;
 }
+
+.ck-success-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.ck-payment-id {
+  background: linear-gradient(135deg, var(--cream), rgba(235, 184, 18, 0.1));
+  border: 1px solid rgba(235, 184, 18, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--text);
+}
+
 .ck-success-total {
-  font-size: 1.3rem; font-weight: 800;
-  color: var(--dark); font-family: 'Playfair Display', serif;
-  margin-bottom: 28px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark);
+  font-family: 'Playfair Display', serif;
+  background: linear-gradient(135deg, var(--white), var(--cream));
+  border: 2px solid rgba(235, 184, 18, 0.2);
+  border-radius: 12px;
+  padding: 20px;
 }
-.ck-success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.ck-success-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ck-success-actions .btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  box-shadow: 0 8px 32px rgba(235, 184, 18, 0.4);
+  padding: 16px 32px;
+  font-size: 16px;
+  border-radius: 50px;
+}
+
+.ck-success-actions .ck-back-btn {
+  background: linear-gradient(135deg, var(--white), var(--cream));
+  border: 2px solid rgba(235, 184, 18, 0.3);
+  color: var(--text);
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.ck-success-actions .ck-back-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  background: var(--white);
+}
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
@@ -456,6 +572,35 @@
   .ck-btn-row { flex-direction: column; }
   .ck-back-btn { justify-content: center; }
   .ck-step-circle { width: 30px; height: 30px; font-size: 12px; }
+  
+  .ck-success {
+    padding: 40px 16px;
+  }
+  
+  .ck-success-icon {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .ck-checkmark-svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .ck-success h2 {
+    font-size: 1.8rem;
+  }
+  
+  .ck-success-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ck-success-actions .btn-primary,
+  .ck-success-actions .ck-back-btn {
+    width: 100%;
+    max-width: 280px;
+  }
 }
 
 @media (max-width: 400px) {

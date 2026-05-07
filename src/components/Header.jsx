@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { FiUser, FiMenu, FiX, FiPhone, FiShoppingCart } from 'react-icons/fi';
+import { FiUser, FiMenu, FiX, FiPhone, FiShoppingCart, FiTag } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.jpeg';
 import { useCart } from '../context/CartContext';
@@ -49,6 +49,20 @@ export default function Header() {
 
   return (
     <>
+      <div className="promo-banner">
+        <div className="promo-scroll">
+          <div className="promo-content">
+            <FiTag size={14} />
+            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <FiTag size={14} />
+            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <FiTag size={14} />
+            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <FiTag size={14} />
+            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+          </div>
+        </div>
+      </div>
       <div className="topbar">
         <div className="container topbar-inner">
           <span><FiPhone size={12} /> +91 8142128079</span>

@@ -28,7 +28,8 @@ export default function CustomerLogin() {
       if (!res.ok) throw new Error(data.error || 'Login failed');
       localStorage.setItem('customerToken', data.token);
       localStorage.setItem('customerData', JSON.stringify({ email: data.email, mobile: data.mobile }));
-      navigate('/customer/dashboard');
+      // Refresh the page after successful login
+      window.location.href = '/customer/dashboard';
     } catch (err) {
       setError(err.message);
     } finally {

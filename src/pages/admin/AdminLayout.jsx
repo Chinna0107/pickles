@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom';
 import { FiGrid, FiPackage, FiShoppingBag, FiBarChart2, FiLogOut } from 'react-icons/fi';
+import logo from '../../assets/logo.jpeg';
 import '../Dashboard.css';
 
 const tabs = [
@@ -30,7 +31,9 @@ export default function AdminLayout() {
     <div className="dash-page admin-dash">
       <aside className="dash-sidebar admin-sidebar">
         <div className="dash-brand">
-          <span className="dash-brand-emoji">🛡️</span>
+          <div className="dash-brand-logo">
+            <img src={logo} alt="OM Pickles" className="dash-brand-logo-img" />
+          </div>
           <div>
             <div className="dash-brand-name">OM Pickles</div>
             <div className="dash-brand-sub">Admin Panel</div>

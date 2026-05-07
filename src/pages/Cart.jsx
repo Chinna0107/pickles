@@ -16,7 +16,7 @@ export default function Cart() {
 
   const subtotal = items.reduce((sum, i) => sum + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
-  const delivery = subtotal >= 499 ? 0 : 60;
+  const delivery = 0;
   const total = subtotal - discount + delivery;
 
   const applyCoupon = () => {
@@ -115,9 +115,7 @@ export default function Cart() {
               {/* DELIVERY BANNER */}
               <div className="delivery-banner">
                 <FiTruck size={18} />
-                {delivery === 0
-                  ? <span>🎉 You've unlocked <strong>FREE delivery!</strong></span>
-                  : <span>Add <strong>₹{499 - subtotal}</strong> more for free delivery</span>}
+                <span>🎉 <strong>FREE delivery</strong> on all orders!</span>
               </div>
             </div>
 
@@ -133,15 +131,9 @@ export default function Cart() {
                   <span>Subtotal ({items.reduce((s, i) => s + i.qty, 0)} items)</span>
                   <span>₹{subtotal}</span>
                 </div>
-                {couponApplied && (
-                  <div className="summary-row discount">
-                    <span>Coupon (OM10)</span>
-                    <span>−₹{discount}</span>
-                  </div>
-                )}
                 <div className="summary-row">
                   <span>Delivery</span>
-                  <span className={delivery === 0 ? 'free' : ''}>{delivery === 0 ? 'FREE' : `₹${delivery}`}</span>
+                  <span className="free">FREE</span>
                 </div>
                 <div className="summary-divider" />
                 <div className="summary-row total">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiShield } from 'react-icons/fi';
+import { FiMail, FiLock, FiArrowRight, FiShield } from 'react-icons/fi';
 import logo from '../assets/logo.jpeg';
 import './Login.css';
 
@@ -9,7 +9,6 @@ import API from '../config';
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: '', password: '' });
-  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -28,7 +27,8 @@ export default function AdminLogin() {
       if (!res.ok) throw new Error(data.error || 'Login failed');
       localStorage.setItem('adminToken', data.token);
       localStorage.setItem('adminData', JSON.stringify(data.admin));
-      navigate('/admin/dashboard');
+      // Refresh the page after successful login
+      window.location.href = '/admin/dashboard';
     } catch (err) {
       setError(err.message);
     } finally {
@@ -77,11 +77,8 @@ export default function AdminLogin() {
             </div>
             <div className="input-group">
               <FiLock className="input-icon" />
-              <input type={showPass ? 'text' : 'password'} placeholder="Admin Password" required
+              <input type="password" placeholder="Admin Password" required
                 value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
-              <button type="button" className="pass-toggle" onClick={() => setShowPass(!showPass)}>
-                {showPass ? <FiEyeOff /> : <FiEye />}
-              </button>
             </div>
             <button type="submit" className="login-btn admin-btn" disabled={loading}>
               <span>{loading ? 'Authenticating...' : 'Access Dashboard'}</span>

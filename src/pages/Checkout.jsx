@@ -10,7 +10,7 @@ import { useCart } from '../context/CartContext';
 import API from '../config';
 import './Checkout.css';
 
-const COUPONS = { OM10: 10, PICKLE20: 20, FIRST15: 15 };
+const COUPONS = { OM10: 10, PICKLE20: 20, FIRST15: 15, PROMO10: 10 };
 
 const STEPS = ['Cart & Promo', 'Review Order', 'Payment'];
 
@@ -62,7 +62,7 @@ function Step1({ items, setItems, coupon, setCoupon, couponApplied, setCouponApp
 
   const subtotal = items.reduce((s, i) => s + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * couponDiscount / 100) : 0;
-  const delivery = subtotal >= 499 ? 0 : 60;
+  const delivery = 0;
   const total = subtotal - discount + delivery;
 
   const applyCoupon = () => {
@@ -125,7 +125,7 @@ function Step1({ items, setItems, coupon, setCoupon, couponApplied, setCouponApp
         <div className="ck-coupon-box">
           <FiTag size={15} />
           <input
-            type="text" placeholder="Promo code (try OM10)"
+            type="text" placeholder="Promo code (try PROMO10)"
             value={coupon} onChange={e => { setCoupon(e.target.value); setCouponError(''); }}
             disabled={couponApplied}
           />
@@ -147,14 +147,8 @@ function Step1({ items, setItems, coupon, setCoupon, couponApplied, setCouponApp
             </div>
           )}
           <div className="ck-summary-row">
-            <span>Delivery</span>
-            <span className={delivery === 0 ? 'green' : ''}>{delivery === 0 ? 'FREE' : `₹${delivery}`}</span>
+            <span>Delivery</span><span className="green">FREE</span>
           </div>
-          {delivery > 0 && (
-            <div className="ck-free-delivery-hint">
-              <FiTruck size={13} /> Add ₹{499 - subtotal} more for free delivery
-            </div>
-          )}
           <div className="ck-summary-divider" />
           <div className="ck-summary-row total">
             <span>Total</span><span>₹{total}</span>
@@ -186,7 +180,7 @@ function Step2({ items, coupon, couponApplied, couponDiscount, address, setAddre
 
   const subtotal = items.reduce((s, i) => s + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * couponDiscount / 100) : 0;
-  const delivery = subtotal >= 499 ? 0 : 60;
+  const delivery = 0;
   const total = subtotal - discount + delivery;
 
   const validate = () => {
@@ -260,8 +254,7 @@ function Step2({ items, coupon, couponApplied, couponDiscount, address, setAddre
             <div className="ck-summary-row green"><span>Promo</span><span>−₹{discount}</span></div>
           )}
           <div className="ck-summary-row">
-            <span>Delivery</span>
-            <span className={delivery === 0 ? 'green' : ''}>{delivery === 0 ? 'FREE' : `₹${delivery}`}</span>
+            <span>Delivery</span><span className="green">FREE</span>
           </div>
           <div className="ck-summary-divider" />
           <div className="ck-summary-row total"><span>Total</span><span>₹{total}</span></div>
@@ -288,7 +281,7 @@ function Step3({ items, coupon, couponApplied, couponDiscount, address, onBack, 
 
   const subtotal = items.reduce((s, i) => s + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * couponDiscount / 100) : 0;
-  const delivery = subtotal >= 499 ? 0 : 60;
+  const delivery = 0;
   const total = subtotal - discount + delivery;
 
   const loadRazorpay = () =>
@@ -406,8 +399,7 @@ function Step3({ items, coupon, couponApplied, couponDiscount, address, onBack, 
             <div className="ck-summary-row green"><span>Promo ({coupon.toUpperCase()})</span><span>−₹{discount}</span></div>
           )}
           <div className="ck-summary-row">
-            <span>Delivery</span>
-            <span className={delivery === 0 ? 'green' : ''}>{delivery === 0 ? 'FREE' : `₹${delivery}`}</span>
+            <span>Delivery</span><span className="green">FREE</span>
           </div>
           <div className="ck-summary-divider" />
           <div className="ck-summary-row total"><span>Total Payable</span><span>₹{total}</span></div>
@@ -429,19 +421,67 @@ function Step3({ items, coupon, couponApplied, couponDiscount, address, onBack, 
 function Success({ paymentId, total, navigate }) {
   return (
     <motion.div className="ck-success"
-      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}>
-      <div className="ck-success-icon">✅</div>
-      <h2>Order Placed!</h2>
-      <p>Thank you for your order. We'll start preparing your pickles right away!</p>
-      <div className="ck-payment-id">Payment ID: <strong>{paymentId}</strong></div>
-      <div className="ck-success-total">Total Paid: ₹{total}</div>
-      <div className="ck-success-actions">
-        <button className="btn-primary" onClick={() => navigate('/')}>
+      initial={{ opacity: 0, scale: 0.8 }} 
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}>
+      
+      <motion.div className="ck-success-icon-container"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}>
+        <div className="ck-success-icon">
+          <motion.div className="ck-checkmark"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: 0.5, duration: 0.6, ease: "easeInOut" }}>
+            <svg viewBox="0 0 52 52" className="ck-checkmark-svg">
+              <circle className="ck-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+              <motion.path 
+                className="ck-checkmark-check" 
+                fill="none" 
+                d="m14.1 27.2l7.1 7.2 16.7-16.8"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ delay: 0.8, duration: 0.5, ease: "easeInOut" }}
+              />
+            </svg>
+          </motion.div>
+        </div>
+      </motion.div>
+      
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}>
+        Order Placed Successfully!
+      </motion.h2>
+      
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.5 }}>
+        Thank you for your order. We'll start preparing your delicious pickles right away!
+      </motion.p>
+      
+      <motion.div className="ck-success-details"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.5 }}>
+        <div className="ck-payment-id">Payment ID: <strong>{paymentId}</strong></div>
+        <div className="ck-success-total">Total Paid: <strong>₹{total}</strong></div>
+      </motion.div>
+      
+      <motion.div className="ck-success-actions"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.5 }}>
+        <motion.button className="btn-primary" onClick={() => navigate('/')}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}>
           <span>Back to Home</span><FiArrowRight />
-        </button>
+        </motion.button>
         <Link to="/products" className="ck-back-btn">Continue Shopping</Link>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -464,7 +504,7 @@ export default function Checkout() {
     item.prices.find(p => p.weight === item.selectedWeight)?.price || item.prices[0].price;
   const subtotal = items.reduce((s, i) => s + getPrice(i) * i.qty, 0);
   const discount = couponApplied ? Math.round(subtotal * couponDiscount / 100) : 0;
-  const delivery = subtotal >= 499 ? 0 : 60;
+  const delivery = 0;
   const total = subtotal - discount + delivery;
 
   if (paymentId) return <div className="ck-page page-enter"><div className="container"><Success paymentId={paymentId} total={total} navigate={navigate} /></div></div>;
