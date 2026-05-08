@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import useSEO from '../hooks/useSEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiShoppingBag, FiSearch, FiFilter } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
@@ -14,6 +15,11 @@ const categories = [
 ];
 
 export default function Products() {
+  useSEO({
+    title: 'Buy Andhra Pickles Online — Veg, Non-Veg & Karam Podi',
+    description: 'Shop 18+ authentic Andhra pickles — Mango Avakaya, Gongura, Chicken, Mutton, Prawn, Fish, Karam Podi & more. Handcrafted, no preservatives. Order online, delivered across India.',
+    canonical: '/products',
+  });
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState(searchParams.get('cat') || 'all');
   const [search, setSearch] = useState('');

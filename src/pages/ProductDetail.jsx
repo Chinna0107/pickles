@@ -30,6 +30,7 @@ const NUTRITION = {
 const SPICE_LABELS = ['', 'Mild', 'Mild-Medium', 'Medium', 'Hot', 'Extra Hot'];
 
 import API from '../config';
+import useSEO from '../hooks/useSEO';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -45,6 +46,49 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
+
+  useSEO({
+    title: product ? `${product.name} — Buy Authentic Andhra Pickle Online` : 'Product',
+    description: product
+      ? `Buy ${product.name} online — ${product.short_desc}. Handcrafted authentic Andhra pickle by OM Pickles & Foods. No preservatives, delivered across India.`
+      : '',
+    canonical: `/products/${slug}`,
+    image: product?.images?.[0],
+    type: 'product',
+  });
+
+  useEffect(() => {
+    if (!product) return;
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'product-jsonld';
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: product.full_desc || product.short_desc,
+      image: product.images,
+      brand: { '@type': 'Brand', name: 'OM Pickles & Foods' },
+      offers: product.prices?.map(p => ({
+        '@type': 'Offer',
+        price: p.price,
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        url: `https://ompicklesandfoods.in/products/${slug}`,
+        name: p.weight,
+      })),
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.rating,
+        reviewCount: product.reviews,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    });
+    document.getElementById('product-jsonld')?.remove();
+    document.head.appendChild(script);
+    return () => document.getElementById('product-jsonld')?.remove();
+  }, [product, slug]);
 
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
 

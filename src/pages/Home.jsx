@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import useSEO from '../hooks/useSEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiStar, FiShoppingBag, FiAward, FiTruck, FiShield, FiHeart } from 'react-icons/fi';
 import { testimonials } from '../data/products';
@@ -149,6 +150,11 @@ function ProductCard({ product, delay = 0 }) {
 }
 
 export default function Home() {
+  useSEO({
+    title: 'Authentic Andhra Pickles — Buy Online India',
+    description: 'Buy authentic Andhra pickles online — Mango Avakaya, Gongura Pachadi, Chicken Pickle, Mutton Pickle, Karam Podi & more. Handcrafted by Beemanaboina Sridevi. Free delivery across India.',
+    canonical: '/',
+  });
   const { products, loading } = useProducts();
   const [currentBanner, setCurrentBanner] = useState(0);
   const [activeTestimonial, setActiveTestimonial] = useState(0);

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FiTarget, FiEye, FiHeart, FiAward, FiUsers, FiPackage } from 'react-icons/fi';
+import useSEO from '../hooks/useSEO';
 import './AboutUs.css';
 
 const stats = [
@@ -17,6 +18,11 @@ const timeline = [
 ];
 
 export default function AboutUs() {
+  useSEO({
+    title: 'About Us — Beemanaboina Sridevi & OM Pickles Story',
+    description: 'Learn about Beemanaboina Sridevi, founder of OM Pickles & Foods. Authentic Andhra pickle recipes passed down through generations, made with love in Hyderabad since 2018.',
+    canonical: '/about',
+  });
   return (
     <div className="about-page page-enter">
       {/* PAGE HERO */}

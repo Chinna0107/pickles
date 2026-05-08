@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiPhone, FiMail, FiMapPin, FiSend, FiClock, FiInstagram, FiFacebook } from 'react-icons/fi';
+import useSEO from '../hooks/useSEO';
 import './Contact.css';
 
 export default function Contact() {
+  useSEO({
+    title: 'Contact Us — Order Andhra Pickles | OM Pickles & Foods',
+    description: 'Contact OM Pickles & Foods for orders, bulk inquiries, or queries. Call +91 8142128079 or email ompicklesandfoodss@gmail.com. Located in Gachibowli, Hyderabad.',
+    canonical: '/contact',
+  });
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
 
