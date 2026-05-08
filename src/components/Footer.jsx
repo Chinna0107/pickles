@@ -13,6 +13,8 @@ export default function Footer() {
       </div>
       <div className="footer-body">
         <div className="container footer-grid">
+
+          {/* BRAND */}
           <div className="footer-brand">
             <div className="footer-logo">
               <img src={logo} alt="OM Pickles Logo" className="footer-logo-img" />
@@ -29,6 +31,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* QUICK LINKS */}
           <div className="footer-col">
             <h4>Quick Links</h4>
             <ul>
@@ -40,6 +43,7 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* CATEGORIES */}
           <div className="footer-col">
             <h4>Categories</h4>
             <ul>
@@ -49,6 +53,22 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* POLICIES */}
+          <div className="footer-col">
+            <h4>Policies</h4>
+            <ul>
+              <li><Link to="/shipping-policy">Shipping Policy</Link></li>
+              <li><Link to="/refund-policy">Refund &amp; Returns</Link></li>
+              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+              <li><Link to="/terms-conditions">Terms &amp; Conditions</Link></li>
+            </ul>
+            <div className="footer-razorpay">
+              <div className="footer-razorpay-label">Payments secured by</div>
+              <div className="footer-razorpay-badge">💳 <span>Razorpay</span></div>
+            </div>
+          </div>
+
+          {/* CONTACT */}
           <div className="footer-col">
             <h4>Contact Us</h4>
             <ul className="contact-list">
@@ -66,11 +86,21 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
         </div>
 
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
-            <p>© 2024 OM Pickles & Foods. All rights reserved. | Owner: <strong>Beemanaboina Sridevi</strong></p>
+            <p>© 2025 OM Pickles &amp; Foods. All rights reserved. | Owner: <strong>Beemanaboina Sridevi</strong></p>
+            <div className="footer-bottom-links">
+              <Link to="/privacy-policy">Privacy</Link>
+              <span>·</span>
+              <Link to="/terms-conditions">Terms</Link>
+              <span>·</span>
+              <Link to="/refund-policy">Refunds</Link>
+              <span>·</span>
+              <Link to="/shipping-policy">Shipping</Link>
+            </div>
             <p>Made with ❤️ in Hyderabad</p>
           </div>
         </div>

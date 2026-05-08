@@ -21,8 +21,8 @@
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  gap: 48px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  gap: 40px;
   padding: 60px 24px 40px;
 }
 
@@ -158,12 +158,57 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
   font-size: 13px;
   color: rgba(255,255,255,0.45);
 }
 
-.footer-bottom-inner strong {
-  color: var(--gold-light);
+.footer-bottom-inner strong { color: var(--gold-light); }
+
+.footer-bottom-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-bottom-links a {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  transition: color 0.2s;
+}
+.footer-bottom-links a:hover { color: var(--gold-light); }
+.footer-bottom-links span { color: rgba(255,255,255,0.2); }
+
+/* RAZORPAY BADGE */
+.footer-razorpay {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footer-razorpay-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.footer-razorpay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #072654;
+  border: 1px solid #1a4a8a;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.footer-razorpay-badge span { color: #3395ff; }
+
+@media (max-width: 1200px) {
+  .footer-grid { grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
 }
 
 @media (max-width: 1024px) {

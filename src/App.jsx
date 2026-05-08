@@ -14,6 +14,11 @@ import Checkout from './pages/Checkout';
 import CustomerLogin from './pages/CustomerLogin';
 import AdminLogin from './pages/AdminLogin';
 
+import ShippingPolicy from './pages/ShippingPolicy';
+import RefundPolicy from './pages/RefundPolicy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
+
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminOverview from './pages/admin/AdminOverview';
 import AdminProducts from './pages/admin/AdminProducts';
@@ -52,6 +57,10 @@ export default function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/login" element={<CustomerLogin />} />
             <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-conditions" element={<TermsConditions />} />
 
             {/* Admin Panel */}
             <Route path="/admin" element={<AdminLayout />}>

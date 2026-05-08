@@ -58,6 +58,35 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Policy Pages -->
+  <url>
+    <loc>https://ompicklesandfoods.in/shipping-policy</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://ompicklesandfoods.in/refund-policy</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://ompicklesandfoods.in/privacy-policy</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://ompicklesandfoods.in/terms-conditions</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- Individual Product Pages - Veg Pickles -->
   <url>
     <loc>https://ompicklesandfoods.in/products/mango-avakaya</loc>

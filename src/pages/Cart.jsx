@@ -1,27 +1,18 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTag, FiTruck } from 'react-icons/fi';
+import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTruck } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import './Cart.css';
 
 export default function Cart() {
   const navigate = useNavigate();
   const { items, updateQty, removeItem, clearCart } = useCart();
-  const [coupon, setCoupon] = useState('');
-  const [couponApplied, setCouponApplied] = useState(false);
-
   const getPrice = (item) =>
     item.prices?.find(p => p.weight === item.selectedWeight)?.price || item.prices?.[0]?.price || 0;
 
   const subtotal = items.reduce((sum, i) => sum + getPrice(i) * i.qty, 0);
-  const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
   const delivery = 0;
-  const total = subtotal - discount + delivery;
-
-  const applyCoupon = () => {
-    if (coupon.trim().toUpperCase() === 'OM10') setCouponApplied(true);
-  };
+  const total = subtotal + delivery;
 
   return (
     <div className="cart-page page-enter">
@@ -141,28 +132,6 @@ export default function Cart() {
                   <span>₹{total}</span>
                 </div>
               </div>
-
-              {/* COUPON */}
-              <div className="coupon-box">
-                <FiTag size={16} />
-                <input
-                  type="text"
-                  placeholder="Enter coupon code"
-                  value={coupon}
-                  onChange={e => setCoupon(e.target.value)}
-                  disabled={couponApplied}
-                />
-                <button
-                  className={`coupon-apply ${couponApplied ? 'applied' : ''}`}
-                  onClick={applyCoupon}
-                  disabled={couponApplied}>
-                  {couponApplied ? '✓' : 'Apply'}
-                </button>
-              </div>
-              {couponApplied && <p className="coupon-success">10% discount applied!</p>}
-              {coupon && !couponApplied && coupon.toUpperCase() !== 'OM10' && (
-                <p className="coupon-hint">Try code: <strong>OM10</strong></p>
-              )}
 
               <motion.button className="checkout-btn" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => navigate('/checkout')}>
                 <FiShoppingBag size={18} />
