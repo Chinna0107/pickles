@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiEdit2, FiTrash2, FiPlus, FiX, FiCheck } from 'react-icons/fi';
+import CloudinaryImageUpload from '../../components/CloudinaryImageUpload';
+import '../../components/CloudinaryImageUpload.css';
 import API from '../../config';
 
 const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}`, 'Content-Type': 'application/json' });
@@ -46,6 +48,18 @@ export default function AdminProducts() {
   const setImage = (i, val) => setForm(f => { const imgs = [...f.images]; imgs[i] = val; return { ...f, images: imgs }; });
   const addImage = () => setForm(f => ({ ...f, images: [...f.images, ''] }));
   const removeImage = (i) => setForm(f => ({ ...f, images: f.images.filter((_, idx) => idx !== i) }));
+
+  const handleImageUploaded = (index, imageUrl) => {
+    setImage(index, imageUrl);
+  };
+
+  const handleImageRemove = (index) => {
+    if (form.images.length === 1) {
+      setImage(index, ''); // Keep at least one empty slot
+    } else {
+      removeImage(index);
+    }
+  };
 
   const setArr = (key, i, val) => setForm(f => { const a = [...f[key]]; a[i] = val; return { ...f, [key]: a }; });
   const addArr = (key) => setForm(f => ({ ...f, [key]: [...f[key], ''] }));
@@ -153,15 +167,26 @@ export default function AdminProducts() {
               ))}
               <button className="dash-btn-ghost" onClick={addPrice}><FiPlus /> Add Price Variant</button>
 
-              <div className="dash-form-section">Images <span style={{fontSize:12,color:'#9ca3af'}}>(paste URLs)</span></div>
-              {form.images.map((img, i) => (
-                <div key={i} className="dash-form-row" style={{ alignItems: 'center', gap: 8 }}>
-                  <div className="dash-form-group" style={{ flex: 1 }}><input value={img} onChange={e => setImage(i, e.target.value)} placeholder="https://..." /></div>
-                  {img && <img src={img} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: '1px solid #e5e7eb' }} onError={e => e.target.style.display='none'} />}
-                  <button className="dash-icon-btn del" onClick={() => removeImage(i)} disabled={form.images.length === 1}><FiX /></button>
-                </div>
-              ))}
-              <button className="dash-btn-ghost" onClick={addImage}><FiPlus /> Add Image</button>
+              <div className="dash-form-section">Images</div>
+              <div className="images-upload-container">
+                {form.images.map((img, i) => (
+                  <CloudinaryImageUpload
+                    key={i}
+                    currentImage={img}
+                    onImageUploaded={(imageUrl) => handleImageUploaded(i, imageUrl)}
+                    onRemove={handleImageRemove}
+                    index={i}
+                  />
+                ))}
+              </div>
+              <button 
+                type="button"
+                className="dash-btn-ghost" 
+                onClick={addImage}
+                style={{ marginTop: '12px' }}
+              >
+                <FiPlus /> Add Another Image
+              </button>
 
               <div className="dash-form-section">Benefits</div>
               {form.benefits.map((b, i) => (

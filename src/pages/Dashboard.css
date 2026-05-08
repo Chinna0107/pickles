@@ -252,6 +252,18 @@
 .dash-form-group textarea { resize: vertical; min-height: 80px; }
 .dash-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #2d2000; cursor: pointer; text-transform: none; letter-spacing: 0; }
 
+/* Images Upload Container */
+.images-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.images-upload-container .cloudinary-upload-container:last-child {
+  margin-bottom: 0;
+}
+
 /* ─── REPORTS ─── */
 .dash-reports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .dash-report-card { background: #fff; border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
