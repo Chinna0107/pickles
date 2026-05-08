@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiMail, FiPhone, FiArrowRight, FiUser } from 'react-icons/fi';
+import { FiMail, FiPhone, FiArrowRight } from 'react-icons/fi';
 import logo from '../assets/logo.jpeg';
 import './Login.css';
 
 import API from '../config';
 
 export default function CustomerLogin() {
-  const [form, setForm] = useState({ email: '', mobile: '', name: '' });
-  const [isRegister, setIsRegister] = useState(false);
+  const [form, setForm] = useState({ email: '', mobile: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -60,50 +59,27 @@ export default function CustomerLogin() {
             <div className="login-brand-sub">& Foods</div>
           </div>
 
-          <div className="login-tabs">
-            <button className={`login-tab ${!isRegister ? 'active' : ''}`} onClick={() => { setIsRegister(false); setError(''); }}>
-              Sign In
+          <h2 className="login-title">Welcome Back!</h2>
+          <p className="login-subtitle">Enter your email & mobile to continue</p>
+
+          {error && <div className="login-error">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <FiMail className="input-icon" />
+              <input type="email" placeholder="Email Address" required
+                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+            </div>
+            <div className="input-group">
+              <FiPhone className="input-icon" />
+              <input type="tel" placeholder="Mobile Number" required
+                value={form.mobile} onChange={e => setForm({ ...form, mobile: e.target.value })} />
+            </div>
+            <button type="submit" className="login-btn" disabled={loading}>
+              <span>{loading ? 'Please wait...' : 'Sign In'}</span>
+              <FiArrowRight />
             </button>
-            <button className={`login-tab ${isRegister ? 'active' : ''}`} onClick={() => { setIsRegister(true); setError(''); }}>
-              Register
-            </button>
-            <div className="tab-slider" style={{ transform: `translateX(${isRegister ? '100%' : '0'})` }} />
-          </div>
-
-          <motion.div key={isRegister ? 'register' : 'login'}
-            initial={{ opacity: 0, x: isRegister ? 20 : -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}>
-
-            <h2 className="login-title">{isRegister ? 'Create Account' : 'Welcome Back!'}</h2>
-            <p className="login-subtitle">{isRegister ? 'Join OM Pickles family today' : 'Enter your email & mobile to continue'}</p>
-
-            {error && <div className="login-error">{error}</div>}
-
-            <form onSubmit={handleSubmit} className="login-form">
-              {isRegister && (
-                <div className="input-group">
-                  <FiUser className="input-icon" />
-                  <input type="text" placeholder="Full Name" value={form.name}
-                    onChange={e => setForm({ ...form, name: e.target.value })} />
-                </div>
-              )}
-              <div className="input-group">
-                <FiMail className="input-icon" />
-                <input type="email" placeholder="Email Address" required
-                  value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-              </div>
-              <div className="input-group">
-                <FiPhone className="input-icon" />
-                <input type="tel" placeholder="Mobile Number" required
-                  value={form.mobile} onChange={e => setForm({ ...form, mobile: e.target.value })} />
-              </div>
-              <button type="submit" className="login-btn" disabled={loading}>
-                <span>{loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}</span>
-                <FiArrowRight />
-              </button>
-            </form>
-          </motion.div>
+          </form>
 
           <div className="login-footer-links">
             <Link to="/">← Back to Home</Link>

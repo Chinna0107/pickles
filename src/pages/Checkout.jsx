@@ -550,7 +550,7 @@ export default function Checkout() {
                 couponApplied={couponApplied} couponDiscount={couponDiscount}
                 address={address}
                 onBack={() => setStep(1)}
-                onSuccess={(pid) => { clearCart(); setPaymentId(pid); }}
+                onSuccess={(pid) => { clearCart(); setPaymentId(pid); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               />
             )}
           </motion.div>
