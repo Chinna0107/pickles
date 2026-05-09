@@ -279,13 +279,13 @@
   top: 80px;
   left: 0;
   right: 0;
-  background: var(--white);
+  background: linear-gradient(180deg, #1a1a1a 0%, #111111 100%);
   z-index: 999;
-  padding: 16px;
+  padding: 20px 16px 24px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  gap: 6px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
   border-bottom: 3px solid var(--gold);
   max-height: calc(100vh - 80px);
   overflow-y: auto;
@@ -296,34 +296,72 @@
   border-radius: 12px;
   font-size: 15px;
   font-weight: 500;
-  color: var(--text);
+  color: rgba(255,255,255,0.85);
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  letter-spacing: 0.3px;
 }
 
 .mobile-link:hover,
 .mobile-link.active {
-  background: rgba(235, 184, 18, 0.1);
-  color: var(--gold-dark);
+  background: rgba(235, 184, 18, 0.12);
+  color: var(--gold);
+  border-color: rgba(235, 184, 18, 0.25);
   padding-left: 28px;
 }
 
+.mobile-link.active {
+  background: rgba(235, 184, 18, 0.15);
+  color: var(--gold);
+  font-weight: 600;
+  border-color: rgba(235, 184, 18, 0.3);
+}
+
+.mobile-menu-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 8px 0;
+}
+
 .login-mobile {
-  background: linear-gradient(135deg, var(--dark), var(--dark2));
-  color: var(--white) !important;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)) !important;
+  color: #1a1a1a !important;
   text-align: center;
-  margin-top: 8px;
+  justify-content: center;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-top: 10px;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(235, 184, 18, 0.4);
+  letter-spacing: 0.5px;
 }
 
 .admin-mobile {
-  background: linear-gradient(135deg, var(--dark), var(--dark2));
-  color: var(--white) !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(255,255,255,0.7) !important;
   text-align: center;
+  justify-content: center;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  letter-spacing: 0.5px;
 }
 
-.login-mobile:hover,
-.admin-mobile:hover {
-  opacity: 0.9;
+.login-mobile:hover {
+  opacity: 0.92;
   padding-left: 20px;
+  box-shadow: 0 6px 28px rgba(235, 184, 18, 0.55);
+  transform: translateY(-1px);
+}
+
+.admin-mobile:hover {
+  background: rgba(255,255,255,0.1) !important;
+  color: white !important;
+  padding-left: 20px;
+  border-color: rgba(255,255,255,0.2) !important;
 }
 
 @media (max-width: 768px) {

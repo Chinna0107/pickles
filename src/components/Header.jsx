@@ -118,8 +118,9 @@ export default function Header() {
                 {link.label}
               </NavLink>
             ))}
-            <Link to="/login" className="mobile-link login-mobile">Customer Login</Link>
-            <Link to="/admin" className="mobile-link admin-mobile">Admin Login</Link>
+            <div className="mobile-menu-divider" />
+            <Link to="/login" className="mobile-link login-mobile">👤 Customer Login</Link>
+            <Link to="/admin" className="mobile-link admin-mobile">🔐 Admin Login</Link>
           </motion.div>
         )}
       </AnimatePresence>
