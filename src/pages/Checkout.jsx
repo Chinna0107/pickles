@@ -10,7 +10,7 @@ import { useCart } from '../context/CartContext';
 import API from '../config';
 import './Checkout.css';
 
-const COUPONS = { OM10: 10, PICKLE20: 20, FIRST15: 15, PROMO10: 10 };
+const COUPONS = { OM10: 0, PICKLE20: 0, FIRST15: 0, GET10: 10 };
 
 const STEPS = ['Cart & Promo', 'Review Order', 'Payment'];
 
@@ -125,7 +125,7 @@ function Step1({ items, setItems, coupon, setCoupon, couponApplied, setCouponApp
         <div className="ck-coupon-box">
           <FiTag size={15} />
           <input
-            type="text" placeholder="Promo code (try PROMO10)"
+            type="text" placeholder="Promo code (try GET10)"
             value={coupon} onChange={e => { setCoupon(e.target.value); setCouponError(''); }}
             disabled={couponApplied}
           />

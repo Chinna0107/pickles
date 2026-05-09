@@ -1,18 +1,40 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTruck } from 'react-icons/fi';
+import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTruck, FiX, FiAlertTriangle } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
+import { useState } from 'react';
 import './Cart.css';
 
 export default function Cart() {
   const navigate = useNavigate();
   const { items, updateQty, removeItem, clearCart } = useCart();
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+  
   const getPrice = (item) =>
     item.prices?.find(p => p.weight === item.selectedWeight)?.price || item.prices?.[0]?.price || 0;
 
   const subtotal = items.reduce((sum, i) => sum + getPrice(i) * i.qty, 0);
   const delivery = 0;
   const total = subtotal + delivery;
+
+  const handleRemoveClick = (item) => {
+    setItemToRemove(item);
+    setShowRemoveModal(true);
+  };
+
+  const confirmRemove = () => {
+    if (itemToRemove) {
+      removeItem(itemToRemove.id, itemToRemove.selectedWeight);
+      setShowRemoveModal(false);
+      setItemToRemove(null);
+    }
+  };
+
+  const cancelRemove = () => {
+    setShowRemoveModal(false);
+    setItemToRemove(null);
+  };
 
   return (
     <div className="cart-page page-enter">
@@ -75,9 +97,16 @@ export default function Cart() {
                             <Link to={`/products/${item.slug}`}><h3>{item.name}</h3></Link>
                             <p className="cart-item-weight">{item.selectedWeight} · {'🌶️'.repeat(item.spice)}</p>
                           </div>
-                          <button className="remove-btn" onClick={() => removeItem(item.id, item.selectedWeight)}>
-                            <FiTrash2 size={16} />
-                          </button>
+                          <div className="cart-item-actions">
+                            <button 
+                              className="remove-btn" 
+                              onClick={() => handleRemoveClick(item)}
+                              title="Remove from cart"
+                            >
+                              <FiTrash2 size={16} />
+                              <span className="remove-text">Remove</span>
+                            </button>
+                          </div>
                         </div>
                         <div className="cart-item-bottom">
                           <div className="cart-price-group">
@@ -153,6 +182,62 @@ export default function Cart() {
           </>
         )}
       </div>
+
+      {/* Remove Confirmation Modal */}
+      <AnimatePresence>
+        {showRemoveModal && (
+          <motion.div 
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={cancelRemove}
+          >
+            <motion.div 
+              className="remove-modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <FiAlertTriangle size={24} />
+                </div>
+                <h3>Remove Item?</h3>
+                <button className="modal-close" onClick={cancelRemove}>
+                  <FiX size={20} />
+                </button>
+              </div>
+              
+              {itemToRemove && (
+                <div className="modal-content">
+                  <div className="item-preview">
+                    <img src={itemToRemove.images?.[0]} alt={itemToRemove.name} />
+                    <div className="item-details">
+                      <h4>{itemToRemove.name}</h4>
+                      <p>{itemToRemove.selectedWeight} • Qty: {itemToRemove.qty}</p>
+                    </div>
+                  </div>
+                  <p className="modal-message">
+                    Are you sure you want to remove this item from your cart?
+                  </p>
+                </div>
+              )}
+              
+              <div className="modal-actions">
+                <button className="modal-btn cancel" onClick={cancelRemove}>
+                  Cancel
+                </button>
+                <button className="modal-btn confirm" onClick={confirmRemove}>
+                  <FiTrash2 size={16} />
+                  Remove Item
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

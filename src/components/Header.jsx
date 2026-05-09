@@ -53,13 +53,13 @@ export default function Header() {
         <div className="promo-scroll">
           <div className="promo-content">
             <FiTag size={14} />
-            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <span>Use code <strong>GET10</strong> for 10% OFF on all orders!</span>
             <FiTag size={14} />
-            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <span>Use code <strong>GET10</strong> for 10% OFF on all orders!</span>
             <FiTag size={14} />
-            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <span>Use code <strong>GET10</strong> for 10% OFF on all orders!</span>
             <FiTag size={14} />
-            <span>Use code <strong>PROMO10</strong> for 10% OFF on all orders!</span>
+            <span>Use code <strong>GET10</strong> for 10% OFF on all orders!</span>
           </div>
         </div>
       </div>

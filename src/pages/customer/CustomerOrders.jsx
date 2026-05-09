@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiPackage, FiClock, FiCheckCircle, FiTruck, FiXCircle } from 'react-icons/fi';
+import { FiPackage, FiClock, FiCheckCircle, FiTruck, FiXCircle, FiExternalLink, FiMapPin } from 'react-icons/fi';
 import API from '../../config';
 
 const STATUS_ICON = {
@@ -54,10 +54,48 @@ export default function CustomerOrders() {
                       </div>
                     ))}
                   </div>
+                  
+                  {/* Tracking Information - Only show if not delivered and tracking exists */}
+                  {(order.tracking_id || order.tracking_link) && order.status !== 'delivered' && (
+                    <div className="dash-order-tracking">
+                      <div className="tracking-header">
+                        <FiTruck className="tracking-icon" />
+                        <span className="tracking-title">Shipment Tracking</span>
+                      </div>
+                      <div className="tracking-content">
+                        {order.tracking_id && (
+                          <div className="tracking-id">
+                            <span className="tracking-label">Tracking ID:</span>
+                            <span className="tracking-value">{order.tracking_id}</span>
+                          </div>
+                        )}
+                        {order.tracking_link && (
+                          <a 
+                            href={order.tracking_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="tracking-button"
+                          >
+                            <FiExternalLink size={14} />
+                            Track Package
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="dash-order-footer">
-                    <span>Total: <strong>₹{parseFloat(order.total).toFixed(0)}</strong></span>
-                    {order.address && <span style={{ fontSize: 12, color: '#6b7280' }}>📍 {order.address}</span>}
-                    {order.coupon && <span className="dash-coupon">Coupon: {order.coupon}</span>}
+                    <div className="order-total">
+                      <span>Total: <strong>₹{parseFloat(order.total).toFixed(0)}</strong></span>
+                    </div>
+                    <div className="order-details">
+                      {order.address && (
+                        <span className="order-address">
+                          <FiMapPin size={12} /> {order.address}
+                        </span>
+                      )}
+                      {order.coupon && <span className="dash-coupon">Coupon: {order.coupon}</span>}
+                    </div>
                   </div>
                 </div>
               );
