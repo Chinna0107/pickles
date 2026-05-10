@@ -20,6 +20,7 @@ const TRUST_BADGES = [
 ];
 
 const TABS = ['Description', 'Ingredients', 'Storage', 'Reviews', 'Nutrition'];
+const TABS_KARAM = ['Description', 'Ingredients', 'Reviews', 'Nutrition'];
 
 const NUTRITION = {
   veg:    { calories: '45 kcal', protein: '2.1g', carbs: '8.5g', fat: '1.2g', fiber: '3.2g', sodium: '890mg' },
@@ -90,7 +91,7 @@ export default function ProductDetail() {
     return () => document.getElementById('product-jsonld')?.remove();
   }, [product, slug]);
 
-  useEffect(() => { window.scrollTo(0, 0); }, [slug]);
+  useEffect(() => { window.scrollTo(0, 0); setActiveTab(0); }, [slug]);
 
   useEffect(() => {
     if (product?.prices?.[0]?.weight) setSelectedWeight(product.prices[0].weight);
@@ -102,12 +103,14 @@ export default function ProductDetail() {
   const prices = product.prices?.length ? product.prices : [{ weight: '', price: 0, originalPrice: 0 }];
   const benefits = product.benefits?.length ? product.benefits : [];
   const ingredients = product.ingredients?.length ? product.ingredients : [];
+  const tabs = product.category === 'karam' ? TABS_KARAM : TABS;
 
   const currentPrice = prices.find(p => p.weight === selectedWeight) || prices[0];
   const discount = currentPrice.originalPrice ? Math.round(((currentPrice.originalPrice - currentPrice.price) / currentPrice.originalPrice) * 100) : 0;
   const relatedProducts = [];
   const nutrition = NUTRITION[product.category] || NUTRITION.veg;
   const reviews = testimonials.slice(0, 3);
+  const activeTabLabel = tabs[activeTab];
 
   const nextImage = () => setSelectedImage(p => (p + 1) % images.length);
   const prevImage = () => setSelectedImage(p => (p - 1 + images.length) % images.length);
@@ -320,7 +323,7 @@ export default function ProductDetail() {
       <section className="pd-tabs-section">
         <div className="container">
           <div className="pd-tabs-header">
-            {TABS.map((tab, i) => (
+            {tabs.map((tab, i) => (
               <button key={i} className={`pd-tab-btn ${activeTab === i ? 'active' : ''}`}
                 onClick={() => setActiveTab(i)}>
                 {tab}
@@ -334,9 +337,9 @@ export default function ProductDetail() {
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
 
-              {activeTab === 0 && <p className="pd-desc-text">{product.full_desc}</p>}
+              {activeTabLabel === 'Description' && <p className="pd-desc-text">{product.fullDesc}</p>}
 
-              {activeTab === 1 && (
+              {activeTabLabel === 'Ingredients' && (
                 <ul className="pd-ingredients">
                   {ingredients.map((ing, i) => (
                     <motion.li key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
@@ -347,7 +350,7 @@ export default function ProductDetail() {
                 </ul>
               )}
 
-              {activeTab === 2 && (
+              {activeTabLabel === 'Storage' && (
                 <div className="pd-storage-grid">
                   {[
                     { icon: '🌡️', title: 'Temperature', desc: 'Store below 25°C' },
@@ -363,7 +366,7 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {activeTab === 3 && (
+              {activeTabLabel === 'Reviews' && (
                 <div className="pd-reviews">
                   <div className="pd-reviews-summary">
                     <div className="avg-rating-block">
@@ -424,7 +427,7 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {activeTab === 4 && (
+              {activeTabLabel === 'Nutrition' && (
                 <div className="pd-nutrition">
                   <div className="pd-nutrition-header">
                     <h3>Nutritional Information</h3>

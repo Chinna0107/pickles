@@ -18,7 +18,11 @@ const banners = [
     cta: 'Shop Now',
     bg: 'linear-gradient(135deg, #1a0a00 0%, #3d1a0a 50%, #c8102e22 100%)',
     accent: '#c8102e',
-    image: 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=700&h=700&fit=crop',
+    images: [
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778404515/WhatsApp_Image_2026-05-10_at_14.44.31_4_eqhu5p.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778405461/WhatsApp_Image_2026-05-10_at_14.56.05_sncsrn.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778405462/WhatsApp_Image_2026-05-10_at_14.56.05_1_qyx6ms.jpg',
+    ],
     badge: '100% Natural',
   },
   {
@@ -30,7 +34,12 @@ const banners = [
     cta: 'Explore Now',
     bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2d 50%, #6b21a822 100%)',
     accent: '#d4a017',
-    image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=700&h=700&fit=crop',
+    images: [
+
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778404515/WhatsApp_Image_2026-05-10_at_14.44.31_u6ztzv.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778404516/WhatsApp_Image_2026-05-10_at_14.44.31_1_uvlhut.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778404515/WhatsApp_Image_2026-05-10_at_14.44.31_3_tqqkl4.jpg',
+    ],
     badge: "Chef's Special",
   },
   {
@@ -42,7 +51,11 @@ const banners = [
     cta: 'Discover More',
     bg: 'linear-gradient(135deg, #0a1a00 0%, #1a2d0a 50%, #16a34a22 100%)',
     accent: '#22c55e',
-    image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=700&h=700&fit=crop',
+    images: [
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778404515/WhatsApp_Image_2026-05-10_at_14.44.31_2_zsviyl.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778405462/WhatsApp_Image_2026-05-10_at_14.56.06_dbvxz4.jpg',
+      'https://res.cloudinary.com/dgyykbmt6/image/upload/v1778405462/WhatsApp_Image_2026-05-10_at_14.56.06_1_viotd3.jpg',
+    ],
     badge: 'Farm Fresh',
   },
 ];
@@ -216,7 +229,7 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 50 }}
                     transition={{ duration: 0.55, ease: 'easeOut' }}>
-                    <img src={banner.image} alt={banner.title} />
+                    <img src={banner.images[0]} alt={banner.title} />
                   </motion.div>
                 </AnimatePresence>
                 <AnimatePresence mode="wait">
@@ -225,7 +238,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 50 }}
                     transition={{ duration: 0.55, delay: 0.1, ease: 'easeOut' }}>
-                    <img src={banners[(currentBanner + 1) % banners.length].image} alt="" />
+                    <img src={banner.images[1]} alt="" />
                   </motion.div>
                 </AnimatePresence>
                 <AnimatePresence mode="wait">
@@ -234,7 +247,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.55, delay: 0.2, ease: 'easeOut' }}>
-                    <img src={banners[(currentBanner + 2) % banners.length].image} alt="" />
+                    <img src={banner.images[2]} alt="" />
                   </motion.div>
                 </AnimatePresence>
               </div>

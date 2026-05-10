@@ -91,7 +91,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
-            <p>© 2025 OM Pickles &amp; Foods. All rights reserved. | Owner: <strong>Beemanaboina Sridevi</strong></p>
+            <p>© 2026 OM Pickles &amp; Foods. All rights reserved. | Owner: <strong>Beemanaboina Sridevi</strong></p>
             <div className="footer-bottom-links">
               <Link to="/privacy-policy">Privacy</Link>
               <span>·</span>
