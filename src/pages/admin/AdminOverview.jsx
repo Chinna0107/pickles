@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import API from '../../config';
+import { formatDate, formatTime } from '../../utils/dateUtils';
 
 const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}`, 'Content-Type': 'application/json' });
 
@@ -47,12 +48,16 @@ export default function AdminOverview() {
               <tr key={o.id}>
                 <td>#{o.id}</td>
                 <td>
-                  <div>{o.email || '—'}</div>
-                  <div style={{ fontSize: 12, color: '#6b7280' }}>{o.mobile}</div>
+                  <div style={{ fontWeight: 600 }}>{o.name || o.email?.split('@')[0] || '—'}</div>
+                  <div style={{ fontSize: 12, color: '#6b7280' }}>{o.email || '—'}</div>
+                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{o.mobile}</div>
                 </td>
                 <td>₹{parseFloat(o.total).toFixed(0)}</td>
                 <td><span className="dash-badge" style={{ background: (STATUS_COLOR[o.status] || '#6b7280') + '20', color: STATUS_COLOR[o.status] || '#6b7280' }}>{o.status}</span></td>
-                <td>{new Date(o.created_at).toLocaleDateString('en-IN')}</td>
+                <td>
+                  <div>{formatDate(o.created_at)}</div>
+                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{formatTime(o.created_at)}</div>
+                </td>
               </tr>
             ))}
           </tbody>

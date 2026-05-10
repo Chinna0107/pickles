@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPrinter, FiTruck, FiEdit2, FiSave, FiX, FiEye, FiFilter, FiSearch, FiDownload, FiRefreshCw } from 'react-icons/fi';
 import API from '../../config';
+import { formatDate, formatTime, formatDateTime } from '../../utils/dateUtils';
 import './AdminOrders.css';
 
 const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}`, 'Content-Type': 'application/json' });
@@ -260,7 +261,7 @@ export default function AdminOrders() {
               <div class="to-address">
                 <div class="address-label">To:</div>
                 <div class="address-content">
-                  <strong>${order.email || 'Customer'}</strong><br>
+                  <strong>${order.name || order.email || 'Customer'}</strong><br>
                   Phone: ${order.mobile}<br>
                   ${order.address ? order.address.replace(/,/g, '<br>') : 'Address not provided'}
                 </div>
@@ -275,7 +276,7 @@ export default function AdminOrders() {
                     day: '2-digit', 
                     month: '2-digit', 
                     year: 'numeric' 
-                  })}</div>
+                  })} ${new Date(order.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
                 </div>
                 <div class="status-badge">${order.status}</div>
               </div>
@@ -460,6 +461,7 @@ export default function AdminOrders() {
                           
                           <td className="customer-cell">
                             <div className="customer-info">
+                              <div className="customer-name">{order.name || order.email?.split('@')[0] || '—'}</div>
                               <div className="customer-email">{order.email || '—'}</div>
                               <div className="customer-phone">{order.mobile}</div>
                             </div>
@@ -557,11 +559,10 @@ export default function AdminOrders() {
                           
                           <td className="date-cell">
                             <div className="order-date">
-                              {new Date(order.created_at).toLocaleDateString('en-IN', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric'
-                              })}
+                              {formatDate(order.created_at)}
+                              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                                {formatTime(order.created_at)}
+                              </div>
                             </div>
                           </td>
                           
@@ -638,6 +639,10 @@ export default function AdminOrders() {
                   <div className="info-section">
                     <h3>Customer Information</h3>
                     <div className="info-item">
+                      <span className="label">Name:</span>
+                      <span className="value">{selectedOrder.name || '—'}</span>
+                    </div>
+                    <div className="info-item">
                       <span className="label">Email:</span>
                       <span className="value">{selectedOrder.email || 'N/A'}</span>
                     </div>
@@ -659,7 +664,10 @@ export default function AdminOrders() {
                     </div>
                     <div className="info-item">
                       <span className="label">Date:</span>
-                      <span className="value">{new Date(selectedOrder.created_at).toLocaleDateString('en-IN')}</span>
+                      <span className="value">
+                        <div>{formatDate(selectedOrder.created_at)}</div>
+                        <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 500 }}>{formatTime(selectedOrder.created_at)}</div>
+                      </span>
                     </div>
                     <div className="info-item">
                       <span className="label">Total:</span>

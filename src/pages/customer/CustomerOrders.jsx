@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiPackage, FiClock, FiCheckCircle, FiTruck, FiXCircle, FiExternalLink, FiMapPin } from 'react-icons/fi';
 import API from '../../config';
+import { formatDateTime } from '../../utils/dateUtils';
 
 const STATUS_ICON = {
   pending: <FiClock />, confirmed: <FiCheckCircle />, processing: <FiPackage />,
@@ -40,7 +41,7 @@ export default function CustomerOrders() {
                   <div className="dash-order-header">
                     <div>
                       <span className="dash-order-id">Order #{order.id}</span>
-                      <span className="dash-order-date">{new Date(order.created_at).toLocaleDateString('en-IN')}</span>
+                      <span className="dash-order-date">{formatDateTime(order.created_at)}</span>
                     </div>
                     <span className="dash-order-status" style={{ background: color + '20', color }}>
                       {STATUS_ICON[order.status]} {order.status}

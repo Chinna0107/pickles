@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiShoppingBag, FiTrendingUp, FiPackage, FiHeart, FiClock } from 'react-icons/fi';
 import API from '../../config';
+import { formatDate, formatTime, formatDateTime } from '../../utils/dateUtils';
 
 const STATUS_COLOR = {
   pending: '#f59e0b', confirmed: '#3b82f6', processing: '#8b5cf6',
@@ -117,7 +118,7 @@ export default function CustomerProfile() {
           <div className="stat-content">
             <div className="stat-number">
               {profile.lastOrderDate 
-                ? new Date(profile.lastOrderDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) 
+                ? formatDate(profile.lastOrderDate)
                 : 'N/A'
               }
             </div>
@@ -188,7 +189,7 @@ export default function CustomerProfile() {
                     <div className="order-summary-header">
                       <div className="order-summary-id">Order #{order.id}</div>
                       <div className="order-summary-date">
-                        {new Date(order.created_at).toLocaleDateString('en-IN')}
+                        {formatDateTime(order.created_at)}
                       </div>
                       <div 
                         className="order-summary-status"

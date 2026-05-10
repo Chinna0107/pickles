@@ -330,6 +330,7 @@ function Step3({ items, coupon, couponApplied, couponDiscount, address, onBack, 
               orderData: {
                 mobile: address.phone,
                 email: address.email,
+                name: address.name,
                 items, subtotal, discount, delivery, total,
                 coupon: couponApplied ? coupon : null,
                 address: `${address.line1}${address.line2 ? ', ' + address.line2 : ''}, ${address.city}, ${address.state} - ${address.pincode}`,

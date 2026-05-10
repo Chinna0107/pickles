@@ -227,17 +227,23 @@
 .customer-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+}
+
+.customer-name {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.95rem;
 }
 
 .customer-email {
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 0.8rem;
+  color: #64748b;
 }
 
 .customer-phone {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
 .items-preview {
@@ -547,18 +553,22 @@
 .info-item {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   padding: 12px 0;
   border-bottom: 1px solid #f1f5f9;
+  gap: 12px;
 }
 
 .info-item .label {
   font-weight: 600;
   color: #64748b;
+  flex-shrink: 0;
 }
 
 .info-item .value {
   font-weight: 600;
   color: #1e293b;
+  text-align: right;
 }
 
 .info-item .value.amount {
