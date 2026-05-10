@@ -5,7 +5,7 @@ import {
   FiStar, FiZoomIn, FiX, FiChevronLeft, FiChevronRight,
   FiShoppingBag, FiCheck, FiHeart, FiTruck, FiShield,
   FiAward, FiPackage, FiMinus, FiPlus, FiShare2, FiMapPin,
-  FiThumbsUp, FiMessageCircle, FiInfo, FiPhone, FiMail, FiGift, FiPercent, FiArrowLeft
+  FiThumbsUp, FiMessageCircle, FiInfo, FiPhone, FiMail, FiPercent, FiArrowLeft
 } from 'react-icons/fi';
 import { testimonials } from '../data/products';
 import { useProduct } from '../hooks/useProducts';
@@ -13,7 +13,7 @@ import { useCart } from '../context/CartContext';
 import './ProductDetail.css';
 
 const TRUST_BADGES = [
-  { icon: <FiTruck />, label: 'Free Delivery', sub: 'Orders above ₹499' },
+  { icon: <FiTruck />, label: 'Free Delivery', sub: 'For a limited period!' },
   { icon: <FiShield />, label: '100% Natural', sub: 'No preservatives' },
   { icon: <FiAward />, label: 'Authentic Recipe', sub: 'Generations old' },
   { icon: <FiPackage />, label: 'Safe Packaging', sub: 'Leak-proof jars' },
@@ -307,13 +307,6 @@ export default function ProductDetail() {
 
         <div className="pd-offers">
           <div className="pd-offer-card">
-            <FiGift className="offer-icon" />
-            <div>
-              <div className="offer-title">Free Gift Wrapping</div>
-              <div className="offer-desc">Perfect for gifting occasions</div>
-            </div>
-          </div>
-          <div className="pd-offer-card">
             <FiPercent className="offer-icon" />
             <div>
               <div className="offer-title">Bulk Discount</div>
@@ -528,7 +521,7 @@ export default function ProductDetail() {
                 </a>
               </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop" alt="Customer Service" />
+            <img src="https://res.cloudinary.com/dgyykbmt6/image/upload/v1778398642/WhatsApp_Image_2026-05-10_at_13.06.16_vgp1do.jpg" alt="Customer Service" />
           </div>
         </div>
       </section>

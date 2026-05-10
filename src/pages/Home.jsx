@@ -296,7 +296,7 @@ export default function Home() {
         </div>
 
         <div className="hero-trust-pill">
-          <span>🚚</span> Free delivery on orders above ₹499
+          <span>🚚</span> Free delivery - For a limited period !
         </div>
 
         <motion.div className="hero-scroll-hint"
