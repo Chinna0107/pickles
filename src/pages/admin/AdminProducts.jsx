@@ -9,7 +9,7 @@ const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('admin
 
 const EMPTY_FORM = {
   name: '', slug: '', category: 'veg', tag: '', emoji: '', short_desc: '', full_desc: '',
-  spice: 1, in_stock: true,
+  spice: 1, in_stock: true, rating: 4.5, reviews: 0,
   prices: [{ weight: '', price: '', originalPrice: '' }],
   images: [''], benefits: [''], ingredients: [''],
 };
@@ -31,6 +31,7 @@ export default function AdminProducts() {
     ...p,
     name: p.name || '', slug: p.slug || '', tag: p.tag || '', emoji: p.emoji || '',
     short_desc: p.short_desc || '', full_desc: p.full_desc || '',
+    rating: p.rating ?? 4.5, reviews: p.reviews ?? 0,
     prices: Array.isArray(p.prices) && p.prices.length ? p.prices : [{ weight: '', price: '', originalPrice: '' }],
     images: Array.isArray(p.images) && p.images.length ? p.images : [''],
     benefits: Array.isArray(p.benefits) && p.benefits.length ? p.benefits : [''],
@@ -70,6 +71,8 @@ export default function AdminProducts() {
     const payload = {
       ...form,
       spice: parseInt(form.spice),
+      rating: parseFloat(form.rating) || 0,
+      reviews: parseInt(form.reviews) || 0,
       prices: form.prices.filter(p => p.weight).map(p => ({ weight: p.weight, price: parseFloat(p.price), originalPrice: parseFloat(p.originalPrice) })),
       images: form.images.filter(Boolean),
       benefits: form.benefits.filter(Boolean),
@@ -149,6 +152,16 @@ export default function AdminProducts() {
                   </select>
                 </div>
                 <div className="dash-form-group"><label>Spice (1–5)</label><input type="number" min="1" max="5" value={form.spice} onChange={e => set('spice', e.target.value)} /></div>
+              </div>
+              <div className="dash-form-row">
+                <div className="dash-form-group">
+                  <label>Rating</label>
+                  <select value={form.rating} onChange={e => set('rating', e.target.value)}>
+                    <option value="4.5">4.5</option>
+                    <option value="5.0">5.0</option>
+                  </select>
+                </div>
+                <div className="dash-form-group"><label>Reviews Count</label><input type="number" min="0" value={form.reviews} onChange={e => set('reviews', e.target.value)} /></div>
               </div>
               <div className="dash-form-group"><label>Short Description</label><input value={form.short_desc} onChange={e => set('short_desc', e.target.value)} /></div>
               <div className="dash-form-group"><label>Full Description</label><textarea rows={3} value={form.full_desc || ''} onChange={e => set('full_desc', e.target.value)} /></div>
