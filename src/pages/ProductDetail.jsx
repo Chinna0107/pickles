@@ -19,8 +19,8 @@ const TRUST_BADGES = [
   { icon: <FiPackage />, label: 'Safe Packaging', sub: 'Leak-proof jars' },
 ];
 
-const TABS = ['Description', 'Ingredients', 'Storage', 'Reviews', 'Nutrition'];
-const TABS_KARAM = ['Description', 'Ingredients', 'Reviews', 'Nutrition'];
+const TABS = ['Description', 'Ingredients', 'Storage', 'Nutrition'];
+const TABS_KARAM = ['Description', 'Ingredients', 'Nutrition'];
 
 const NUTRITION = {
   veg:    { calories: '45 kcal', protein: '2.1g', carbs: '8.5g', fat: '1.2g', fiber: '3.2g', sodium: '890mg' },
@@ -209,16 +209,6 @@ export default function ProductDetail() {
             <h1 className="pd-title">{product.name}</h1>
             <p className="pd-subtitle">{product.short_desc}</p>
 
-            <div className="pd-rating-row">
-              <div className="pd-stars">
-                {[...Array(5)].map((_, i) => (
-                  <FiStar key={i} className={i < Math.round(product.rating) ? 'filled' : ''} />
-                ))}
-              </div>
-              <span className="pd-rating-val">{product.rating}</span>
-              <span className="pd-reviews">({product.reviews} reviews)</span>
-            </div>
-
             <div className="pd-price-block">
               <span className="pd-price">₹{currentPrice.price}</span>
               <span className="pd-orig">₹{currentPrice.originalPrice}</span>
@@ -337,7 +327,7 @@ export default function ProductDetail() {
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
 
-              {activeTabLabel === 'Description' && <p className="pd-desc-text">{product.fullDesc}</p>}
+              {activeTabLabel === 'Description' && <p className="pd-desc-text">{product.full_desc || product.short_desc}</p>}
 
               {activeTabLabel === 'Ingredients' && (
                 <ul className="pd-ingredients">
@@ -363,67 +353,6 @@ export default function ProductDetail() {
                       <div><strong>{s.title}</strong><p>{s.desc}</p></div>
                     </div>
                   ))}
-                </div>
-              )}
-
-              {activeTabLabel === 'Reviews' && (
-                <div className="pd-reviews">
-                  <div className="pd-reviews-summary">
-                    <div className="avg-rating-block">
-                      <span className="avg-num">{product.rating}</span>
-                      <div className="avg-stars">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar key={i} className={i < Math.round(product.rating) ? 'filled' : ''} />
-                        ))}
-                      </div>
-                      <span className="avg-count">{product.reviews} reviews</span>
-                    </div>
-                    <div className="rating-bars">
-                      {[5, 4, 3, 2, 1].map(star => (
-                        <div key={star} className="rating-bar-row">
-                          <span>{star}★</span>
-                          <div className="bar-track">
-                            <div className="bar-fill" style={{ width: `${star === 5 ? 85 : star === 4 ? 12 : 3}%` }} />
-                          </div>
-                          <span>{star === 5 ? 85 : star === 4 ? 12 : 3}%</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pd-reviews-list">
-                    {reviews.slice(0, showAllReviews ? reviews.length : 2).map((r, i) => (
-                      <motion.div key={r.id} className="pd-review-card"
-                        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.08 }}>
-                        <div className="review-top">
-                          <div className="reviewer">
-                            <div className="reviewer-avatar">{r.avatar}</div>
-                            <div>
-                              <div className="reviewer-name">{r.name}</div>
-                              <div className="reviewer-city"><FiMapPin size={11} /> {r.city}</div>
-                            </div>
-                          </div>
-                          <div className="review-stars">
-                            {[...Array(5)].map((_, si) => (
-                              <FiStar key={si} className={si < r.rating ? 'filled' : ''} />
-                            ))}
-                          </div>
-                        </div>
-                        <p className="review-text">{r.text}</p>
-                        <div className="review-actions">
-                          <button><FiThumbsUp size={13} /> Helpful</button>
-                          <button><FiMessageCircle size={13} /> Reply</button>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {reviews.length > 2 && (
-                    <button className="pd-show-more" onClick={() => setShowAllReviews(!showAllReviews)}>
-                      {showAllReviews ? 'Show Less' : `Show All ${reviews.length} Reviews`}
-                    </button>
-                  )}
                 </div>
               )}
 
@@ -475,12 +404,6 @@ export default function ProductDetail() {
                   <div className="related-info">
                     <div className="related-top-row">
                       <span>{rp.emoji}</span>
-                      <div className="related-stars">
-                        {[...Array(5)].map((_, si) => (
-                          <FiStar key={si} className={si < Math.round(rp.rating) ? 'filled' : ''} />
-                        ))}
-                        <span>({rp.rating})</span>
-                      </div>
                     </div>
                     <h4>{rp.name}</h4>
                     <p>{rp.shortDesc}</p>
